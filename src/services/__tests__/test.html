@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div id="root"></div>
+<script src=".build/ux/form-field-valid.js"></script>
+<script>
+  customElements.define('com.rajeevn.popup-info', class extends HTMLElement {
+    constructor() {
+      // Always call super first in constructor
+      super();
+      const shadow = this.attachShadow({mode: 'open'});
+      /*shadow.innerHTML += '<style></style><div>hello1<com.rajeevn.popup-info></com.rajeevn.popup-info></div>';
+      shadow.removeChild(shadow.childNodes[1]);*/
+      shadow.innerHTML += '<div>hello2</div>';
+    }
+  });
+  const root = document.getElementById('root');
+  root.innerHTML = '<div>Hello<span><com.rajeevn.popup-info><form-field-valid></form-field-valid></com.rajeevn.popup-info></span></div>';
+
+</script>
+</body>
+</html>

@@ -1,1 +1,5 @@
-export default () => 2 + 2
+import { loadConfigurations } from './configurations/configuration';
+
+loadConfigurations();
+
+export * from './services/UXCompiler';

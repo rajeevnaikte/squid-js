@@ -1,0 +1,5 @@
+namespace: panel;
+
+<div class="my-panel">
+  <items />
+</div>
