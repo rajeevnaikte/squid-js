@@ -15,11 +15,12 @@
       const shadow = this.attachShadow({mode: 'open'});
       /*shadow.innerHTML += '<style></style><div>hello1<com.rajeevn.popup-info></com.rajeevn.popup-info></div>';
       shadow.removeChild(shadow.childNodes[1]);*/
-      shadow.innerHTML += '<div>hello2</div>';
+      shadow.innerHTML += '<style>.form-group {    margin: 100px;  }</style>';
+      shadow.innerHTML += '<div>hello2<form-field-valid></form-field-valid></div>';
     }
   });
   const root = document.getElementById('root');
-  root.innerHTML = '<div>Hello<span><com.rajeevn.popup-info><form-field-valid></form-field-valid></com.rajeevn.popup-info></span></div>';
+  root.innerHTML = '<div>Hello<span><com.rajeevn.popup-info></com.rajeevn.popup-info></span></div>';
 
 </script>
 </body>

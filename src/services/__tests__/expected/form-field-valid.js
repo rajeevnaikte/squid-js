@@ -19,7 +19,7 @@ try {
 
     addHtml () {
       if (this.shadowRoot) {
-        this.shadowRoot.innerHTML += '<label for="'+(this.getAttribute('exampleInputEmail1') || '')+'">'+(this.getAttribute('i18n:Email address') || '')+'</label>  <input type="email" class="form-control" id="'+(this.getAttribute('exampleInputEmail1') || '')+'" aria-describedby="emailHelp" placeholder="'+(this.getAttribute('i18n:Enter email') || '')+'">  <small id="emailHelp" class="form-text text-muted">'+(this.getAttribute('i18n:We\'ll never share your email with anyone else.') || '')+'</small>';
+        this.shadowRoot.innerHTML += '<div class="form-group">    <label for="'+(this.getAttribute('exampleInputEmail1') || '')+'">'+(this.getAttribute('i18n:Email address') || '')+'</label>    <input type="email" class="form-control" id="'+(this.getAttribute('exampleInputEmail1') || '')+'" aria-describedby="emailHelp" placeholder="'+(this.getAttribute('i18n:Enter email') || '')+'">    <small id="emailHelp" class="form-text text-muted">'+(this.getAttribute('i18n:We\'ll never share your email with anyone else.') || '')+'</small>  </div>';
       }
     }
 

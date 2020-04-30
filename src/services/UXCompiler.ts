@@ -1,6 +1,6 @@
 import { basename } from 'path';
 import { BaseError, readFile, TextsBetween, walkDirTree, writeFile } from 'squid-utils';
-import { HtmlBodyMissing, MultipleHtmlBody, MultipleScript, MultipleStyles, NamespaceMissing } from './errors';
+import { MultipleScript, MultipleStyles, MultipleTemplate, NamespaceMissing, TemplateMissing } from './errors';
 import * as cheerio from 'cheerio';
 import { UXComponentCode } from './types';
 import { Config, getConfig } from '../configurations/configuration';
@@ -87,38 +87,39 @@ export class UXCompiler {
     const $: CheerioStatic = cheerio.load(uxCode.substr(nameSpaceEndIdx + 1), {
       decodeEntities: false
     });
-    const headStyle = $('head > style');
-    const bodyStyle = $('body > style');
-    if ((headStyle.length + bodyStyle.length) > 1) {
+    const styleEl = $('style');
+    if (styleEl.length > 1) {
       errors.push(new MultipleStyles(uxFilePath));
     }
+    const style = styleEl.html()?.trim() ?? undefined;
+    styleEl.remove();
 
-    const body = $('body > :not(script)');
-    if (body.length > 1) {
-      errors.push(new MultipleHtmlBody(uxFilePath));
-    } else if (body.length !== 1) {
-      errors.push(new HtmlBodyMissing(uxFilePath));
-    }
-
-    const headScript = $('head > script');
-    const bodyScript = $('body > script');
-    if ((headScript.length + bodyScript.length) > 1) {
+    const scriptEl = $('script');
+    if (scriptEl.length > 1) {
       errors.push(new MultipleScript(uxFilePath));
     }
+    const script = scriptEl.html()?.trim() ?? undefined;
+    scriptEl.remove();
+
+    const templateEl = $('template');
+    if (templateEl.length > 1) {
+      errors.push(new MultipleTemplate(uxFilePath));
+    } else if (templateEl.length !== 1) {
+      errors.push(new TemplateMissing(uxFilePath));
+    }
+    const html = templateEl.html()?.trim() ?? '';
 
     if (errors.length > 0) {
       throw errors;
     }
 
-    const html = body.html()?.trim() ?? '';
-
     return {
       namespace,
       name: basename(uxFilePath, '.ux'),
-      style: headStyle.html()?.trim() ?? bodyStyle.html()?.trim() ?? undefined,
+      style,
       html,
       variables: this.variablePattern.get(html),
-      script: headScript.html()?.trim() ?? bodyScript.html()?.trim() ?? undefined
+      script
     };
   }
 }

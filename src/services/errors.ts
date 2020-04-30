@@ -13,9 +13,9 @@ export class MultipleStyles extends BaseError {
   }
 }
 
-export class MultipleHtmlBody extends BaseError {
+export class MultipleTemplate extends BaseError {
   constructor (uxFilePath: string) {
-    super('MULTI_HTML', `${uxFilePath} has multiple body tags. Expected all html code to be wrapped in a single tag.`);
+    super('MULTI_TEMPLATE', `${uxFilePath} has multiple template tags. Expected all html code to be wrapped in a template tag.`);
   }
 }
 
@@ -25,8 +25,8 @@ export class MultipleScript extends BaseError {
   }
 }
 
-export class HtmlBodyMissing extends BaseError {
+export class TemplateMissing extends BaseError {
   constructor (uxFilePath: string) {
-    super('MISSING_HTML', `${uxFilePath} has no html for the view. Expected html code wrapped in a single tag.`);
+    super('MISSING_TEMPLATE', `${uxFilePath} has no html for the view. Expected html code wrapped in a template tag.`);
   }
 }

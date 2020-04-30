@@ -1,5 +1,5 @@
 import { UXCompiler } from '../UXCompiler';
-import { MultipleHtmlBody, MultipleStyles, NamespaceMissing } from '../errors';
+import { MultipleStyles, MultipleTemplate, NamespaceMissing } from '../errors';
 import { loadConfigurations } from '../../configurations/configuration';
 import { pathExists, readFile } from 'squid-utils';
 
@@ -16,7 +16,7 @@ describe('Compiler', () => {
       }).toThrow([
         new NamespaceMissing(uxFile),
         new MultipleStyles(uxFile),
-        new MultipleHtmlBody(uxFile)
+        new MultipleTemplate(uxFile)
       ].join());
     });
 
@@ -35,10 +35,20 @@ describe('Compiler', () => {
           '    margin: 10px;\n' +
           '  }',
         html: '<div class="form-group">\n' +
-          '  <label for="[exampleInputEmail1]">[i18n:Email address]</label>\n' +
-          '  <input type="email" class="form-control" id="[exampleInputEmail1]" aria-describedby="emailHelp" placeholder="[i18n:Enter email]">\n' +
-          '  <small id="emailHelp" class="form-text text-muted">[i18n:We&apos;ll never share your email with anyone else.]</small>\n' +
-          '</div>'
+          '    <label for="[exampleInputEmail1]">[i18n:Email address]</label>\n' +
+          '    <input type="email" class="form-control" id="[exampleInputEmail1]" aria-describedby="emailHelp" placeholder="[i18n:Enter email]">\n' +
+          '    <small id="emailHelp" class="form-text text-muted">[i18n:We\'ll never share your email with anyone else.]</small>\n' +
+          '  </div>',
+        script: 'this.onresize = () => {\n' +
+          '    console.log(\'hello\');\n' +
+          '  };',
+        variables: [
+          'exampleInputEmail1',
+          'i18n:Email address',
+          'exampleInputEmail1',
+          'i18n:Enter email',
+          'i18n:We\'ll never share your email with anyone else.'
+        ]
       });
     });
 
@@ -54,10 +64,19 @@ describe('Compiler', () => {
         namespace: 'form.field',
         name: 'no-style',
         html: '<div class="form-group">\n' +
-          '  <label for="[exampleInputEmail1]">[i18n:Email address]</label>\n' +
-          '  <input type="email" class="form-control" id="[exampleInputEmail1]" aria-describedby="emailHelp" placeholder="[i18n:Enter email]">\n' +
-          '  <small id="emailHelp" class="form-text text-muted">[i18n:We&apos;ll never share your email with anyone else.]</small>\n' +
-          '</div>'
+          '    <label for="[exampleInputEmail1]">[i18n:Email address]</label>\n' +
+          '    <input type="email" class="form-control" id="[exampleInputEmail1]" aria-describedby="emailHelp" placeholder="[i18n:Enter email]">\n' +
+          '    <small id="emailHelp" class="form-text text-muted">[i18n:We\'ll never share your email with anyone else.]</small>\n' +
+          '  </div>',
+        script: undefined,
+        style: undefined,
+        variables: [
+          'exampleInputEmail1',
+          'i18n:Email address',
+          'exampleInputEmail1',
+          'i18n:Enter email',
+          'i18n:We\'ll never share your email with anyone else.'
+        ]
       });
     });
   });
