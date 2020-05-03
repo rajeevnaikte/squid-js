@@ -1,15 +1,15 @@
-import { Config, getConfig, loadConfigurations } from '../configuration';
+import { Config, getConfig, loadConfigs } from '../configuration';
 
 describe('configuration', () => {
-  test('default configs', () => {
+  test('default Config', () => {
     delete process.env.ROOT_DIR;
-    loadConfigurations();
+    loadConfigs();
     expect(getConfig(Config.ROOT_DIR)).toEqual('.');
   });
 
-  test('default configs', () => {
+  test('default Config', () => {
     process.env.ROOT_DIR = 'test';
-    loadConfigurations();
+    loadConfigs();
     expect(getConfig(Config.ROOT_DIR)).toEqual('test');
   });
 });

@@ -1,5 +1,5 @@
-import { loadConfigurations } from './configurations/configuration';
+import { loadConfigs } from './configurations/configuration';
 
-loadConfigurations();
+loadConfigs();
 
 export * from './services/Compiler';

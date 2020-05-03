@@ -1,4 +1,4 @@
-import { ComponentDef } from '../ui/types';
+import { ComponentDef } from '../src/ui/types';
 
 export const app: ComponentDef = {
   ux: 'panel.my-panel',

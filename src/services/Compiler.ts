@@ -20,18 +20,19 @@ export class Compiler {
    * Compile the .ux file(s).
    * @param uxDir
    */
-  compileUX (uxDir: string) {
-    walkDirTree(uxDir, {
+  compileUX (uxDir: string): string[] {
+    return walkDirTree(uxDir, {
       fileNameMatcher: new RegExp(`[.]${getConfig(Config.UX_FILE_EXTN)}$`, 'g'),
       recursive: true
     })
-      .forEach(uxFilePath => {
+      .map(uxFilePath => {
         try {
-          this.compile(uxFilePath);
+          return this.compile(uxFilePath);
         } catch (e) {
           console.error(e);
         }
-      });
+      })
+      .filter(uxjs => uxjs) as string[];
   }
 
   /**

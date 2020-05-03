@@ -2,7 +2,6 @@ if (window.ux['form-field-valid']) {
   throw 'UX form-field-valid already exists.';
 }
 window.ux['form-field-valid'] = {
-  name: 'form-field-valid',
   loaded: false,
   style() {
     const el0 = document.createTextNode('.form-group {     margin: 10px;   }');

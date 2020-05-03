@@ -1,6 +1,6 @@
 import { Compiler } from '../Compiler';
 import { MultipleStyles, MultipleTemplate, NamespaceMissing } from '../errors';
-import { loadConfigurations } from '../../configurations/configuration';
+import { loadConfigs } from '../../configurations/configuration';
 import { pathExists, readFile } from 'squid-utils';
 
 describe('Compiler', () => {
@@ -86,8 +86,9 @@ describe('Compiler', () => {
   });
 
   describe('compile', () => {
-    process.env.ROOT_DIR = __dirname;
-    loadConfigurations();
+    loadConfigs({
+      ROOT_DIR: __dirname
+    });
 
     test('valid code', () => {
       const compiler = new Compiler();

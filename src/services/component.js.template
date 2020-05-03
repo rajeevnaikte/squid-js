@@ -2,7 +2,6 @@ if (window.ux\['[name]'\]) {
     throw 'UX [name] already exists.';
 }
 window.ux\['[name]'\] = {
- name: '[name]',
  loaded: false,
  style () {
     [style]

@@ -1,5 +1,5 @@
 import { Compiler } from '../..';
-import { app } from '../../examples/app';
+import { app } from '../../../examples/app';
 import { UI } from '../ui';
 
 describe('build layout', () => {
