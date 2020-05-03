@@ -22,7 +22,7 @@ export class Compiler {
    */
   compileUX (uxDir: string) {
     walkDirTree(uxDir, {
-      fileNameMatcher: /[.]ux$/g,
+      fileNameMatcher: new RegExp(`[.]${getConfig(Config.UX_FILE_EXTN)}$`, 'g'),
       recursive: true
     })
       .forEach(uxFilePath => {
@@ -67,7 +67,7 @@ export class Compiler {
         <${customElementName}></${customElementName}>
       </body>`, { runScripts: 'dangerously' });
 
-    const uxComponentClassFilePath = `${getConfig(Config.ROOT_DIR)}/.build/ux/${customElementName}.uxjs`;
+    const uxComponentClassFilePath = `${getConfig(Config.ROOT_DIR)}/.build/ux/${customElementName}.${getConfig(Config.UXJS_FILE_EXTN)}`;
     writeFile(uxComponentClassFilePath, beautify(componentCode, { indent_size: 2 })); // eslint-disable-line @typescript-eslint/camelcase
 
     return uxComponentClassFilePath;
