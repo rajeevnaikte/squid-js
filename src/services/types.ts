@@ -1,7 +1,7 @@
 /**
  * Sections in .ux file.
  */
-export interface UXComponentCode {
+export type UXCode = {
   [key: string]: string | string[] | undefined;
   /**
    * Namespace to uniquely identify the ux component.
@@ -25,7 +25,23 @@ export interface UXComponentCode {
    */
   variables: string[];
   /**
+   * Translations requirements.
+   */
+  i18ns: string[];
+  /**
    * JavaScript code to perform UX related changes, such as, resize etc.
    */
   script?: string;
 }
+
+/**
+ * JS code to build the ux.
+ * List of lines of JS code.
+ */
+export type UXJSCode = {
+  [key: string]: string | string[];
+  name: string;
+  style: string[];
+  html: string[];
+  script: string[];
+};

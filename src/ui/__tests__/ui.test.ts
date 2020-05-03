@@ -1,9 +1,9 @@
-import { UXCompiler } from '../..';
+import { Compiler } from '../..';
 import { app } from '../../examples/app';
 import { UI } from '../ui';
 
 describe('build layout', () => {
-  const compiler = new UXCompiler();
+  const compiler = new Compiler();
   compiler.compileUX(`${__dirname}/../../examples/ux/`);
 
   test('layout', () => {

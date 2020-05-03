@@ -2,12 +2,18 @@ import { basename } from 'path';
 import { BaseError, readFile, TextsBetween, walkDirTree, writeFile } from 'squid-utils';
 import { MultipleScript, MultipleStyles, MultipleTemplate, NamespaceMissing, TemplateMissing } from './errors';
 import * as cheerio from 'cheerio';
-import { UXComponentCode } from './types';
+import { UXCode } from './types';
 import { Config, getConfig } from '../configurations/configuration';
 import { JSDOM } from 'jsdom';
-import { kebabCase } from 'lodash';
+import { uniq } from 'lodash';
+import { HtmlToJSCodeGenerator } from './HtmlToJSCodeGenerator';
+import { js as beautify } from 'js-beautify';
+import { getCustomElementName } from '../common/utils';
 
-export class UXCompiler {
+/**
+ * Compiler for UX html code.
+ */
+export class Compiler {
   private readonly variablePattern = new TextsBetween('[', ']');
 
   /**
@@ -32,53 +38,55 @@ export class UXCompiler {
    * Compile a single .ux file and create custom element.
    * @param uxFilePath
    */
-  private compile (uxFilePath: string) {
-    const uxComponentCode = this.parse(uxFilePath);
+  private compile (uxFilePath: string): string {
+    const uxCode = this.parse(uxFilePath);
+    const uxjsCode = new HtmlToJSCodeGenerator(uxCode)
+      .withVariablePattern(this.variablePattern)
+      .generate();
+
     const template = readFile(`${__dirname}/component.js.template`);
-    const customElementName = `${kebabCase(uxComponentCode.namespace)}-${uxComponentCode.name}`;
+    const customElementName = getCustomElementName(uxCode);
 
     const componentCode = this.variablePattern.replace(template, key => {
-      if (key === 'html') {
-        return this.variablePattern.split(uxComponentCode.html)
-          .map(htmlPart => {
-            if (typeof htmlPart === 'string') {
-              return `'${htmlPart.replace(/'/g, '\\\'').replace(/\n/g, '')}'`;
-            } else {
-              return `(this.getAttribute('${htmlPart.textBetween.replace(/'/g, '\\\'')}') || '')`;
-            }
-          })
-          .join('+');
+      const value = uxjsCode[key];
+      if (Array.isArray(value)) {
+        return value.join('\n');
       }
-      else if (key === 'style') {
-        return `'${uxComponentCode.style?.replace(/'/g, '\\\'').replace(/\n/g, '')}'` ?? '';
+      else {
+        return value;
       }
-      else if (key === 'namespace') {
-        return kebabCase(uxComponentCode.namespace);
-      }
-      return uxComponentCode[key]?.toString() ?? '';
     });
 
     // Validate the ux component code.
-    new JSDOM(`<body><script>${componentCode}</script><${customElementName}></${customElementName}></body>`, { runScripts: 'dangerously' });
+    new JSDOM(`<body>
+        <script>
+          const i18n = { translate: () => '' };
+          window.ux = {};
+        </script>
+        <script>${componentCode}</script>
+        <${customElementName}></${customElementName}>
+      </body>`, { runScripts: 'dangerously' });
 
-    const uxComponentClassFilePath = `${getConfig(Config.ROOT_DIR)}/.build/ux/${customElementName}.js`;
-    writeFile(uxComponentClassFilePath, componentCode);
+    const uxComponentClassFilePath = `${getConfig(Config.ROOT_DIR)}/.build/ux/${customElementName}.uxjs`;
+    writeFile(uxComponentClassFilePath, beautify(componentCode, { indent_size: 2 })); // eslint-disable-line @typescript-eslint/camelcase
+
+    return uxComponentClassFilePath;
   }
 
   /**
    * Parse and extract component ux code parts.
    * @param uxCode
    */
-  private parse (uxFilePath: string): UXComponentCode {
+  private parse (uxFilePath: string): UXCode {
     const uxCode = readFile(uxFilePath);
     const errors: BaseError[] = [];
 
+    // extract namespace
     let nameSpaceEndIdx = uxCode.indexOf(';');
     if (!uxCode.substring(0, nameSpaceEndIdx).match(/^namespace: [^<]+$/g)) {
       errors.push(new NamespaceMissing(uxFilePath));
       nameSpaceEndIdx = -1;
     }
-
     const namespace = uxCode.substring('namespace: '.length, nameSpaceEndIdx).trim().replace(/(\/|\\)+/g, '.');
     if (namespace.length === 0) {
       errors.push(new NamespaceMissing(uxFilePath));
@@ -87,13 +95,16 @@ export class UXCompiler {
     const $: CheerioStatic = cheerio.load(uxCode.substr(nameSpaceEndIdx + 1), {
       decodeEntities: false
     });
+
+    // extract style
     const styleEl = $('style');
     if (styleEl.length > 1) {
       errors.push(new MultipleStyles(uxFilePath));
     }
-    const style = styleEl.html()?.trim() ?? undefined;
+    const style = styleEl.html()?.trim();
     styleEl.remove();
 
+    // extract script
     const scriptEl = $('script');
     if (scriptEl.length > 1) {
       errors.push(new MultipleScript(uxFilePath));
@@ -101,10 +112,12 @@ export class UXCompiler {
     const script = scriptEl.html()?.trim() ?? undefined;
     scriptEl.remove();
 
+    // extract html
     const templateEl = $('template');
     if (templateEl.length > 1) {
       errors.push(new MultipleTemplate(uxFilePath));
-    } else if (templateEl.length !== 1) {
+    }
+    else if (templateEl.length !== 1) {
       errors.push(new TemplateMissing(uxFilePath));
     }
     const html = templateEl.html()?.trim() ?? '';
@@ -113,12 +126,14 @@ export class UXCompiler {
       throw errors;
     }
 
+    const allVariables = uniq(this.variablePattern.get(html));
     return {
       namespace,
       name: basename(uxFilePath, '.ux'),
       style,
       html,
-      variables: this.variablePattern.get(html),
+      variables: allVariables.filter(variable => !variable.startsWith('i18n:')),
+      i18ns: allVariables.filter(variable => variable.startsWith('i18n:')),
       script
     };
   }

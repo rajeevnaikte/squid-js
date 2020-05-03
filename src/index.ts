@@ -2,4 +2,4 @@ import { loadConfigurations } from './configurations/configuration';
 
 loadConfigurations();
 
-export * from './services/UXCompiler';
+export * from './services/Compiler';

@@ -3,12 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <title>Title</title>
+  <style>
+    .el-1 {
+      color: #b65353;
+    }
+  </style>
 </head>
 <body>
 <div id="root"></div>
 <script src=".build/ux/form-field-valid.js"></script>
 <script>
-  customElements.define('com.rajeevn.popup-info', class extends HTMLElement {
+  const i18n = { translate: () => '' };
+  class Component extends HTMLElement {
     constructor() {
       // Always call super first in constructor
       super();
@@ -16,11 +22,15 @@
       /*shadow.innerHTML += '<style></style><div>hello1<com.rajeevn.popup-info></com.rajeevn.popup-info></div>';
       shadow.removeChild(shadow.childNodes[1]);*/
       shadow.innerHTML += '<style>.form-group {    margin: 100px;  }</style>';
-      shadow.innerHTML += '<div>hello2<form-field-valid></form-field-valid></div>';
+      shadow.innerHTML += '<div class="class1">hello2<form-field-valid></form-field-valid></div>';
+      shadow.appendChild(document.createTextNode('heollooooo'));
+      this.onclick = () => alert('');
     }
-  });
+  }
+  customElements.define('com.rajeevn.popup-info', Component);
   const root = document.getElementById('root');
-  root.innerHTML = '<div>Hello<span><com.rajeevn.popup-info></com.rajeevn.popup-info></span></div>';
+  root.appendChild(document.createTextNode('alert(\'hello\')'));
+  root.innerHTML += '<div>Hello<span><com.rajeevn.popup-info class="el-1"></com.rajeevn.popup-info></span></div>';
 
 </script>
 </body>

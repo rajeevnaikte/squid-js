@@ -1,38 +1,13 @@
-try {
-  customElements.define('[namespace]-[name]', class extends HTMLElement {
-    items;
-
-    constructor () {
-      super();
-      this.attachShadow({ mode: 'open' });
-      this.addStyle();
-      this.addHtml();
-      this.addScript();
-      this.getAttributeNames()
-    }
-
-    addStyle () {
-      if (this.shadowRoot) {
-        this.shadowRoot.innerHTML += '<style>' + [style] + '</style>';
-      }
-    }
-
-    addHtml () {
-      if (this.shadowRoot) {
-        this.shadowRoot.innerHTML += [html];
-      }
-    }
-
-    addScript () {
-      [script]
-    }
-  });
-} catch (e) {
-  if (e.message.includes('not a valid custom element name')) {
-    throw 'UX component name [namespace]-[name] is not valid.';
-  }
-  else if (e.message.includes('has already been used')) {
-    throw 'UX component [namespace]-[name] already exists.';
-  }
-  throw e;
-}
+window.ux\['[name]'\] = {
+ name: '[name]',
+ loaded: false,
+ style () {
+    [style]
+ },
+ html () {
+    [html]
+ },
+ script () {
+    [script]
+ }
+};
