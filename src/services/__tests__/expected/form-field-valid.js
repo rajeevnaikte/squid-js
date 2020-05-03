@@ -1,3 +1,6 @@
+if (window.ux['form-field-valid']) {
+  throw 'UX form-field-valid already exists.';
+}
 window.ux['form-field-valid'] = {
   name: 'form-field-valid',
   loaded: false,
