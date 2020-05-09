@@ -1,12 +1,21 @@
-import { ComponentDef } from './types';
+import { ComponentDef, UXJSCode } from './types';
 import { ElementMissing } from './errors';
-import { getCustomElementName } from '../common/utils';
+import { kebabCase } from 'lodash';
 
-// @ts-ignore
-window.ux = {};
-// @ts-ignore
-window.ui = {
-  render (app: ComponentDef, elementId?: string): void {
+export class UX {
+  static uxjs: Map<string, UXJSCode> = new Map();
+
+  static add (uxjsCode: UXJSCode): void {
+    this.uxjs.set(uxjsCode.name, uxjsCode);
+  }
+
+  static get (uxName: string): UXJSCode | undefined {
+    return this.uxjs.get(uxName);
+  }
+}
+
+export class UI {
+  static render (app: ComponentDef, elementId?: string): void {
     const root = elementId ? document.getElementById(elementId) : document.body;
     if (!root) {
       throw new ElementMissing(elementId ?? '');
@@ -14,13 +23,13 @@ window.ui = {
 
     root.hidden = true;
 
-    const appRoot = getCustomElementName(app.ux);
+    const appRoot = kebabCase(app.ux);
     root.append(`<${appRoot}></${appRoot}>`);
 
     root.hidden = false;
-  },
+  }
 
-  loadUX (ux: string) {
+  static loadUX (ux: string) {
     try {
 
     } catch (e) {
@@ -33,4 +42,4 @@ window.ui = {
       throw e;
     }
   }
-};
+}

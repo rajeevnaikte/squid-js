@@ -1,5 +1,2 @@
-import { loadConfigs } from './configurations/configuration';
-
-loadConfigs();
-
-export * from './services/Compiler';
+export * from './ui/ui';
+export { setConfigs } from './configurations/configuration';

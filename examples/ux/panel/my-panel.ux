@@ -1,7 +1,0 @@
-namespace: panel;
-
-<template>
-  <div class="my-panel">
-    <items/>
-  </div>
-</template>

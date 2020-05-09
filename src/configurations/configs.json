@@ -1,7 +1,2 @@
 {
-  "ROOT_DIR": ".",
-  "UX_FILE_EXTN": "ux",
-  "UXJS_FILE_EXTN": "uxjs",
-  "UX_FILES_DIR": "./examples",
-  "UXJS_NODE_MODULES": ["./node_modules/@uxjs"]
 }
