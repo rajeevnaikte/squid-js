@@ -1,12 +1,13 @@
 import { UX } from '../ui';
 import { readFile } from 'ts-loader/dist/utils';
-import { webDriver } from './BrowserFacade';
 import { html as prettyHtml } from 'js-beautify';
 
 describe('UX UI', () => {
   describe('UX', () => {
-    test('add and get', async () => {
-      const html = await webDriver.executeScript(`
+    test('add uxjs', async () => {
+      // @ts-ignore
+      const html = await global.webDriver
+        .executeScript(`
         const i18n = { translate: () => '' };
         window.onerror = (message, file, line, column, errorObj) => {
           document.body.setAttribute('js-error', errorObj ? errorObj.stack : 'Error');
@@ -23,7 +24,9 @@ describe('UX UI', () => {
       expect(prettyHtml(html as string))
         .toEqual(prettyHtml(readFile(`${__dirname}/expected/valid.ux`) ?? ''));
 
-      const errors = await webDriver.manage().logs().get('browser');
+      // @ts-ignore
+      const errors = await global.webDriver
+        .manage().logs().get('browser');
       expect(errors).toEqual([]);
     });
   });

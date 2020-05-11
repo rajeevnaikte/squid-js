@@ -1,7 +1,4 @@
 module.exports = {
-  roots: [
-    '<rootDir>/src'
-  ],
   transform: {
     '^.+\\.tsx?$': 'ts-jest'
   },
@@ -20,5 +17,11 @@ module.exports = {
     'lcov',
     'clover',
     'text-summary'
+  ],
+  testMatch: [
+    '**/__tests__/**/*.test.ts'
+  ],
+  setupFilesAfterEnv: [
+    '<rootDir>/src/__tests__/setup-tests/setup.ts'
   ]
 }
