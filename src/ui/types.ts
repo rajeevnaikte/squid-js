@@ -9,9 +9,9 @@ export type ComponentDef = {
  * List of lines of JS code.
  */
 export type UXJSCode = {
-  [key: string]: string | string[];
+  [key: string]: string | (() => HTMLElement[]) | (() => void);
   name: string;
-  style: string[];
-  html: string[];
-  script: string[];
+  style: () => HTMLElement[];
+  html: () => HTMLElement[];
+  script: () => void;
 };
