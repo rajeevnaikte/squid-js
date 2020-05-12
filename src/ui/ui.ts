@@ -3,8 +3,8 @@ import { ElementMissing, UXExists, UXNameNotValid } from './errors';
 import { kebabCase } from 'lodash';
 
 export class UX {
-  static add (uxjsCode: UXJSCode): void {
-    UX.load(uxjsCode);
+  static add (...uxjsList: UXJSCode[]): void {
+    uxjsList.forEach(UX.load);
   }
 
   private static load (uxjs: UXJSCode) {
@@ -35,6 +35,8 @@ export class UX {
 }
 
 export class UI {
+  private static elCount = 0;
+
   static render (app: ComponentDef, elementId?: string): void {
     const root = elementId ? document.getElementById(elementId) : document.body;
     if (!root) {
@@ -44,7 +46,9 @@ export class UI {
     root.hidden = true;
 
     const appRoot = kebabCase(app.ux);
-    root.append(`<${appRoot}></${appRoot}>`);
+    const appRootEl = document.createElement(appRoot);
+    appRootEl.setAttribute('id', 'ux-' + this.elCount++);
+    root.append(appRootEl);
 
     root.hidden = false;
   }

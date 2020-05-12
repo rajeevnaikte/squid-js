@@ -1,11 +1,11 @@
 {
-  "name": "node-template",
+  "name": "squid-ui",
   "version": "1.0.0",
-  "description": "Template repo for NodeJS projects",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "description": "UI Framework for JSON style",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "lib/**/*"
+    "dist/**/*"
   ],
   "scripts": {
     "lint": "eslint 'src/**/*.{ts,js}'",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rajeevnaikte/node-template.git"
+    "url": "git+https://github.com/rajeevnaikte/squid-ui.git"
   },
   "keywords": [
     "template"
@@ -24,9 +24,9 @@
   "author": "Rajeev N",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rajeevnaikte/node-template/issues"
+    "url": "https://github.com/rajeevnaikte/squid-ui/issues"
   },
-  "homepage": "https://github.com/rajeevnaikte/node-template#readme",
+  "homepage": "https://github.com/rajeevnaikte/squid-ui#readme",
   "dependencies": {
     "squid-utils": "^2.1.2"
   },
