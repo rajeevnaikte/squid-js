@@ -1,0 +1,16 @@
+namespace: form.field;
+
+<style>
+  .form-group {
+    margin: 10px;
+  }
+</style>
+
+<template>
+  <div class="form-group">
+    <label for="[exampleInputEmail1]">[i18n:Email address]</label>
+    <input type="email" class="form-control" id="[exampleInputEmail1]" aria-describedby="emailHelp"
+           placeholder="[i18n:Enter email]">
+    <small id="emailHelp" class="form-text text-muted">[i18n:We'll never share your email with anyone else.]</small>
+  </div>
+</template>

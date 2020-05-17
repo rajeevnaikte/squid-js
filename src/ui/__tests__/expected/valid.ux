@@ -1,20 +1,20 @@
-<form-field-valid id="ux-1">
-  <style class="ux-1">
-    .form-group.ux-1 {
+<form-field-valid id="ux-0">
+  <style class="ux-0">
+    .form-group.ux-0 {
       color: red;
     }
 
-    #ux123.ux-1 {
+    #ux123.ux-0 {
       padding: 10px;
     }
 
-    #ux123.ux-1 .some-class.ux-1 {
+    #ux123.ux-0 .some-class.ux-0 {
       color: red;
     }
 
-    .some-class.some-class2.ux-1, .some-class.some-class3.ux-1, .some-class.some-class4.ux-1 {
+    .some-class.some-class2.ux-0, .some-class.some-class3.ux-0, .some-class.some-class4.ux-0 {
       border: 1px solid red;
     }
   </style>
-  <div class="form-group ux-1"><label for="" class="ux-1"></label>test<input type="email" class="form-control ux-1" id="" aria-describedby="emailHelp" placeholder="">test2<br class="ux-1"><small id="emailHelp" class="form-text text-muted ux-1"></small></div>
+  <div class="form-group ux-0"><label for="" class="ux-0"></label>test<input type="email" class="form-control ux-0" id="" aria-describedby="emailHelp" placeholder="">test2<br class="ux-0"><small id="emailHelp" class="form-text text-muted ux-0"></small></div>
 </form-field-valid>

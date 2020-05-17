@@ -1,0 +1,18 @@
+module.exports = {
+  name: 'panel-my-panel',
+  style() {
+
+  },
+  html() {
+    this.onDataUpdate = {};
+    const el2 = document.createElement('items');
+    el2.setAttribute('class', this.getAttribute('id'));
+    const el3 = document.createElement('div');
+    el3.setAttribute('class', 'my-panel ' + this.getAttribute('id'));
+    el3.appendChild(el2);
+    return [el3];
+  },
+  script() {
+
+  }
+};
