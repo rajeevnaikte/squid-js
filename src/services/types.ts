@@ -6,7 +6,7 @@ export type ComponentDef = {
 
 /**
  * JS code to build the ux.
- * List of lines of JS code.
+ * Lines of JS code.
  */
 export type UXJSCode = {
   [key: string]: string | (() => HTMLElement[]) | (() => void);

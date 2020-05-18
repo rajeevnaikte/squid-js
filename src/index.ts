@@ -1,6 +1,7 @@
-import { UI, UX } from './ui/ui';
+import { UX } from './services/UX';
+import { UI } from './services/UI';
 
-export { ComponentDef } from './ui/types';
+export { ComponentDef } from './services/types';
 
 // @ts-ignore
 window.i18n = { translate: () => 'l10n' };

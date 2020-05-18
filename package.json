@@ -12,7 +12,8 @@
     "lint:fix": "eslint 'src/**/*.{ts,js}' --fix",
     "test": "ENV=test jest",
     "build": "tsc && webpack",
-    "prepublish": "tsc"
+    "prepublish": "tsc",
+    "serve": "export UI_MODULE_NAME=../src && uxui serve -u ./examples/ux -e ./examples/app.ts"
   },
   "repository": {
     "type": "git",
@@ -44,7 +45,7 @@
     "jest": "^25.5.4",
     "js-beautify": "^1.11.0",
     "selenium-webdriver": "^4.0.0-alpha.7",
-    "squid-uxui": "^1.0.7",
+    "squid-uxui": "^1.0.8",
     "ts-jest": "^25.5.1",
     "ts-loader": "^7.0.4",
     "ts-node": "^8.10.1",

@@ -1,4 +1,3 @@
-import { UX } from '../ui';
 import { readFile } from 'ts-loader/dist/utils';
 import { html as prettyHtml } from 'js-beautify';
 import { getWebDriver } from '../../__tests__/setup-tests/setup';
@@ -10,7 +9,7 @@ describe('UX UI', () => {
       const html = await (await getWebDriver())
         .executeScript(`
           const i18n = { translate: () => '' };
-          ${readFile('./dist/ui.bundle.js')}
+          ${readFile('./dist/services.bundle.js')}
           var module = {};
           ${readFile(`${__dirname}/data/valid.uxjs`)}
           UX.add(module.exports);
@@ -30,7 +29,7 @@ describe('UX UI', () => {
       const html = await (await getWebDriver())
         .executeScript(`
         const i18n = { translate: () => '' };
-        ${readFile('./dist/ui.bundle.js')}
+        ${readFile('./dist/services.bundle.js')}
         var module = {};
         ${readFile(`${__dirname}/data/valid.uxjs`)}
         UX.add(module.exports);
@@ -48,7 +47,7 @@ describe('UX UI', () => {
       const html = await (await getWebDriver())
         .executeScript(`
         const i18n = { translate: () => '' };
-        ${readFile('./dist/ui.bundle.js')}
+        ${readFile('./dist/services.bundle.js')}
         var module = {};
         ${readFile(`${__dirname}/data/valid.uxjs`)}
         UX.add(module.exports);
@@ -70,7 +69,7 @@ describe('UX UI', () => {
       const html = await webDriver
         .executeScript(`
         const i18n = { translate: () => '' };
-        ${readFile('./dist/ui.bundle.js')}
+        ${readFile('./dist/services.bundle.js')}
         var module = {};
         ${readFile(`${__dirname}/data/valid.uxjs`)}
         UX.add(module.exports);
