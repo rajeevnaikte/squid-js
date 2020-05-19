@@ -1,11 +1,24 @@
-import { ComponentDef, UI } from '../src';
+import { UI } from '../src';
+import { ViewState } from '../src/model/ViewState';
 
-const app: ComponentDef = {
-  ux: 'panel.my-panel',
+const app: ViewState = {
+  ux: 'form.form',
   name: '',
   items: [
     {
-      ux: 'form.field.textinput'
+      ux: 'form.text-input',
+      label: 'Input 1',
+      name: 'input-1',
+      value: 1
+    },
+    {
+      ux: 'form.text-input',
+      label: 'Input 2',
+      name: 'input-2',
+      value: 2
+    },
+    {
+      ux: 'form.submit-button'
     }
   ]
 }

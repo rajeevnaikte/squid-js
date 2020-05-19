@@ -1,0 +1,7 @@
+namespace: form;
+
+<template>
+  <div>
+    [label]: <input type="text" name="[name]" value="[value]">
+  </div>
+</template>

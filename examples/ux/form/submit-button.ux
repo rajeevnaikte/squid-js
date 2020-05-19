@@ -1,0 +1,5 @@
+namespace: form;
+
+<template>
+  <button type="submit"></button>
+</template>
