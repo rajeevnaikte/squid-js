@@ -15,4 +15,5 @@ export interface CustomElement extends HTMLElement {
   onDataUpdate: { [dataJsonPath: string]: (() => void)[] };
   getData: (name: string) => string;
   connectedCallback: () => void;
+  postRender: () => void;
 }

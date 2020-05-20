@@ -1,4 +1,4 @@
-import { JsonObjectType } from 'squid-utils';
+import { emptyVoidFn, JsonObjectType } from 'squid-utils';
 import { baseViewConfigKeys, ViewState } from './ViewState';
 import { CustomElement } from './types';
 import { getUniqueElId } from '../common/utils';
@@ -14,9 +14,9 @@ export class ViewModel {
   private readonly items: ViewModel[] = [];
   private attachedTo?: ViewModel;
   readonly domEl: CustomElement;
-  private readonly itemsEl: Element | null;
+  private itemsEl?: Element | null;
 
-  constructor (viewState: ViewState, attachTo?: ViewModel | HTMLElement) {
+  constructor (viewState: ViewState) {
     this.id = getUniqueElId();
 
     this.state = new Proxy(this.extractState(viewState), {
@@ -35,17 +35,12 @@ export class ViewModel {
       if (stateKey === 'id') return this.id;
       return queryJsonPath(this.state, stateKey)?.toString() ?? '';
     }
-
-    if (attachTo) {
-      if (attachTo instanceof HTMLElement) {
-        attachTo.appendChild(this.domEl);
-      }
-      else {
-        this.attachTo(attachTo);
-      }
+    this.domEl.postRender = () => {
+      this.itemsEl = this.domEl.getElementsByTagName('items')[0];
+      this.items.forEach(item => item.attachTo(this));
+      this.domEl.postRender = emptyVoidFn;
     }
 
-    this.itemsEl = this.domEl.getElementsByTagName('items')[0];
     viewState.items?.forEach(this.addItem.bind(this));
   }
 
@@ -111,7 +106,7 @@ export class ViewModel {
    */
   addItem (viewState: ViewState | ViewModel): void {
     if (!(viewState instanceof ViewModel)) {
-      viewState = new ViewModel(viewState, this);
+      viewState = new ViewModel(viewState);
     }
 
     this.items.push(viewState);
@@ -137,11 +132,11 @@ export class ViewModel {
  * Get Genesis ViewModel.
  */
 export class GenesisViewModel {
-  private readonly rootEl: HTMLElement;
+  private readonly domEl: HTMLElement;
   private readonly items: ViewModel[] = [];
 
   constructor (rootEl: HTMLElement) {
-    this.rootEl = rootEl;
+    this.domEl = rootEl;
   }
 
   /**
@@ -149,7 +144,8 @@ export class GenesisViewModel {
    * @param viewState
    */
   add (viewState: ViewState): void {
-    const viewModel = new ViewModel(viewState, this.rootEl);
+    const viewModel = new ViewModel(viewState);
+    this.domEl.appendChild(viewModel.domEl);
     this.items.push(viewModel);
   }
 }

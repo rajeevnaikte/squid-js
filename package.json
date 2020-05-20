@@ -29,11 +29,11 @@
   },
   "homepage": "https://github.com/rajeevnaikte/squid-ui#readme",
   "dependencies": {
-    "squid-utils": "^2.2.0"
+    "squid-utils": "^3.0.3"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",
-    "@types/js-beautify": "^1.8.2",
+    "@types/js-beautify": "^1.11.0",
     "@types/lodash": "^4.14.152",
     "@types/webpack": "^4.41.13",
     "@typescript-eslint/eslint-plugin": "^2.34.0",

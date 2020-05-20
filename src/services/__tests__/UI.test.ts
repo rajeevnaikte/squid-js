@@ -14,12 +14,18 @@ describe('UI', () => {
   });
 
   test('component items not allowed', async () => {
-    expect(() => UI.render({
-      ux: 'form-field-valid',
-      items: [{
-        ux: 'form-field-valid'
-      }]
-    })).toThrow(new ItemsNotAllowed('FORM-FIELD-VALID'));
+    await expect(new Promise((resolve, reject) => {
+      window.onerror = ((event, source, lineno, colno, error) => {
+        reject(error);
+      });
+
+      UI.render({
+        ux: 'form-field-valid',
+        items: [{
+          ux: 'form-field-valid'
+        }]
+      });
+    })).rejects.toThrow(new ItemsNotAllowed('FORM-FIELD-VALID'));
   });
 
   test('add component items', async () => {

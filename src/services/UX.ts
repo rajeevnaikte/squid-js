@@ -3,6 +3,7 @@ import { UXExists, UXNameNotValid } from '../exceptions/errors';
 import { addDefinedComponent, verifyCanDefine } from '../data/storage';
 import { kebabCase } from 'lodash';
 import { ComponentType } from '../model/ComponentType';
+import { emptyStringFn, emptyVoidFn } from 'squid-utils';
 
 /**
  * Class with static method to load/pre-process uxjs code.
@@ -28,9 +29,10 @@ export class UX {
       verifyCanDefine(uxjs.name);
 
       customElements.define(uxjs.name, class extends HTMLElement implements CustomElement {
-        onDataUpdate = {};
-        getData = () => '';
         rendered = false;
+        onDataUpdate = {};
+        getData = emptyStringFn;
+        postRender = emptyVoidFn;
 
         connectedCallback () {
           if (!this.rendered) {
@@ -38,7 +40,9 @@ export class UX {
             const htmlEls = uxjs.html.bind(this)();
             this.append(...styleEls, ...htmlEls);
             uxjs.script.bind(this)();
+
             this.rendered = true;
+            if (this.postRender) this.postRender();
           }
         }
       });
