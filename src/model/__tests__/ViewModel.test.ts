@@ -31,5 +31,13 @@ describe('ViewModel', () => {
 
     expect(prettyHtml(document.body.innerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/with-state.ux`) ?? ''));
+
+    // @ts-ignore
+    const uxViewModel = viewModel.items[0];
+    // @ts-ignore
+    expect(uxViewModel.state).toEqual({
+      exampleInputEmail1: 'my-email',
+      exampleInputEmail2: 1234
+    });
   });
 });
