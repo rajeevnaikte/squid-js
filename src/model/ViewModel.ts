@@ -16,7 +16,7 @@ export class ViewModel {
   readonly domEl: CustomElement;
   private readonly itemsEl: Element | null;
 
-  constructor (viewState: ViewState, attachTo?: ViewModel) {
+  constructor (viewState: ViewState, attachTo?: ViewModel | HTMLElement) {
     this.id = getUniqueElId();
 
     this.state = new Proxy(this.extractState(viewState), {
@@ -36,7 +36,14 @@ export class ViewModel {
       return queryJsonPath(this.state, stateKey)?.toString() ?? '';
     }
 
-    if (attachTo) this.attachTo(attachTo);
+    if (attachTo) {
+      if (attachTo instanceof HTMLElement) {
+        attachTo.appendChild(this.domEl);
+      }
+      else {
+        this.attachTo(attachTo);
+      }
+    }
 
     this.itemsEl = this.domEl.getElementsByTagName('items')[0];
     viewState.items?.forEach(this.addItem.bind(this));
@@ -67,24 +74,21 @@ export class ViewModel {
   /**
    * Attach this ViewModel to another. A ViewModel can be attached to only one.
    * So it will remove previous ViewModel and attach to new ViewModel.
-   * @param attachToEl
+   * @param attachTo
    */
-  attachTo (attachToEl: ViewModel): void {
+  attachTo (attachTo: ViewModel): void {
     if (this.attachedTo) {
       this.detach();
     }
-    this.attachEl(attachToEl);
-    this.attachedTo = attachToEl;
+    this.attachEl(attachTo);
+    this.attachedTo = attachTo;
   }
 
   /**
    * Attach dom element.
    */
-  private attachEl (attachToEl: ViewModel | HTMLElement) {
-    if (attachToEl instanceof HTMLElement) {
-      attachToEl.append(this.domEl);
-    }
-    else if (attachToEl.itemsEl) {
+  private attachEl (attachToEl: ViewModel) {
+    if (attachToEl.itemsEl) {
       attachToEl.itemsEl.append(this.domEl);
     }
     else {
@@ -145,8 +149,7 @@ export class GenesisViewModel {
    * @param viewState
    */
   add (viewState: ViewState): void {
-    const viewModel = new ViewModel(viewState);
-    this.rootEl.appendChild(viewModel.domEl);
+    const viewModel = new ViewModel(viewState, this.rootEl);
     this.items.push(viewModel);
   }
 }
