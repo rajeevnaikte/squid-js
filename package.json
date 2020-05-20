@@ -32,24 +32,21 @@
     "squid-utils": "^2.2.0"
   },
   "devDependencies": {
-    "@types/chromedriver": "^81.0.0",
     "@types/jest": "^25.2.3",
     "@types/js-beautify": "^1.8.2",
-    "@types/lodash": "^4.14.151",
-    "@types/selenium-webdriver": "^4.0.9",
+    "@types/lodash": "^4.14.152",
     "@types/webpack": "^4.41.13",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
-    "chromedriver": "^81.0.0",
     "eslint": "^6.8.0",
     "jest": "^25.5.4",
+    "jest-environment-jsdom-sixteen": "^1.0.3",
     "js-beautify": "^1.11.0",
-    "selenium-webdriver": "^4.0.0-alpha.7",
     "squid-uxui": "^1.0.8",
     "ts-jest": "^25.5.1",
     "ts-loader": "^7.0.4",
     "ts-node": "^8.10.1",
-    "typescript": "^3.9.2",
+    "typescript": "^3.9.3",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   }

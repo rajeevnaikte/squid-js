@@ -23,4 +23,5 @@ const app: ViewState = {
   ]
 }
 
-UI.render(app);
+// @ts-ignore
+window.genesisViewModel = UI.render(app);

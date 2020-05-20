@@ -17,31 +17,20 @@ export class UI {
 
   /**
    * Call this function with root view JSON of your app.
-   * @param app - JSON style object which defines the UI. It will be added inside html body tag.
-   * @param elementId - Optionally provide a root element id to load the app into.
+   * @param app - JSON style view layout which defines the UI. It will be added inside html body tag.
+   * @param elementId - Optionally provide a root element id to load the app into (instead of body tag).
    */
-  static render (app: ViewState, elementId?: string): void {
+  static render (app: ViewState, elementId?: string): GenesisViewModel {
     const root = elementId ? document.getElementById(elementId) : document.body;
     if (!root) {
       throw new ElementMissing(elementId ?? '');
     }
+    // Clear element before loading app.
+    root.innerHTML = '';
 
-    // @ts-ignore
-    window.GenesisViewModel = GenesisViewModel.getInstance(root);
-    GenesisViewModel.getInstance(root).addItem(app);
-  }
-
-  /**
-   * Render single component with options in JSON form.
-   * @param comp
-   * @param parentEl
-   */
-  private static renderView (comp: ViewState, parentEl: Element) {
-
-  }
-
-  private static buildView () {
-
+    const genesisViewModel = new GenesisViewModel(root);
+    genesisViewModel.add(app);
+    return genesisViewModel;
   }
 
   static define (compName: string, compDef: UXComponent): void {

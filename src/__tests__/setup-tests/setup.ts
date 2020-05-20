@@ -1,27 +1,19 @@
-import { Builder as WebDriver, ThenableWebDriver } from 'selenium-webdriver';
-import * as chrome from 'selenium-webdriver/chrome';
-import * as chromeDriver from 'chromedriver';
-import { Config } from '../../configurations/configuration';
+import { UX } from '../..';
+import * as utils from '../../common/utils';
 
-let webDriver: ThenableWebDriver;
+let elCount = 0;
+
 beforeAll(() => {
-  jest.setTimeout(60000);
-  chromeDriver.start();
-
-  webDriver = new WebDriver()
-    .forBrowser('chrome')
-    .setChromeOptions((Config.ENV === 'dev' ? new chrome.Options() : new chrome.Options().headless()))
-    .build();
+  UX.add(require('../data/panel-my-panel.uxjs'));
+  UX.add(require('../data/valid.uxjs'));
 });
 
-afterAll(async () => {
-  await webDriver.quit();
-  chromeDriver.stop();
-})
+beforeEach(() => {
+  jest.spyOn(utils, 'getUniqueElId').mockImplementation(() => `ux-${elCount++}`);
+});
 
-export const getWebDriver = async () => {
-  await webDriver.executeScript('window.open()');
-  const tabs = await webDriver.getAllWindowHandles()
-  await webDriver.switchTo().window(tabs[tabs.length -1]);
-  return webDriver;
-};
+afterEach(() => {
+  elCount = 0;
+  document.body.innerHTML = '';
+  jest.clearAllMocks();
+});

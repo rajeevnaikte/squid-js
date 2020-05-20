@@ -3,11 +3,11 @@ import { UXComponent } from '../model/UXComponent';
 import { ComponentType } from '../model/ComponentType';
 
 const definedComponents = {
-  [ComponentType.HTML]: new Map<string, UXComponent>(),
-  [ComponentType.COMPOSITE]: new Map<string, UXComponent>()
+  [ComponentType.HTML]: new Map<string, UXComponent | undefined>(),
+  [ComponentType.COMPOSITE]: new Map<string, UXComponent | undefined>()
 }
 
-export const addDefinedComponent = (compName: string, compType: ComponentType, compDef: UXComponent): void => {
+export const addDefinedComponent = (compName: string, compType: ComponentType, compDef?: UXComponent): void => {
   definedComponents[compType].set(compName, compDef);
 };
 

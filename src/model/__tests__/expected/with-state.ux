@@ -16,5 +16,5 @@
       border: 1px solid red;
     }
   </style>
-  <div class="form-group ux-0"><label for="" class="ux-0"></label>test<input type="email" class="form-control ux-0" id="" aria-describedby="emailHelp" placeholder="">test2<br class="ux-0"><small id="emailHelp" class="form-text text-muted ux-0"></small></div>
+  <div class="form-group ux-0"><label for="my-email" class="ux-0"></label>test<input type="email" class="form-control ux-0" id="1234" aria-describedby="emailHelp" placeholder="">test2<br class="ux-0"><small id="emailHelp" class="form-text text-muted ux-0"></small></div>
 </form-field-valid>

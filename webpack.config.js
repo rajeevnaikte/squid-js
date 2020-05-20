@@ -15,7 +15,7 @@ module.exports = {
     extensions: [ '.tsx', '.ts', '.js' ],
   },
   output: {
-    filename: 'services.bundle.js',
+    filename: 'ui.bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
   node: {
