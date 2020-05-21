@@ -16,7 +16,7 @@ describe('ViewModel', () => {
     const uxViewModel = genesis.items[0];
     expect(uxViewModel).toBeDefined();
     // @ts-ignore
-    expect(uxViewModel.id).toEqual('ux-0');
+    expect(uxViewModel._id).toEqual('ux-0');
     // @ts-ignore
     expect(uxViewModel.state).toEqual({});
   });
@@ -99,19 +99,19 @@ describe('ViewModel', () => {
     const removed = form.removeItem(0);
     expect(prettyHtml(document.body.innerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/after-detach.ux`)));
-    expect(removed?.getAttachedTo()).toEqual(undefined);
+    expect(removed?.attachedTo).toEqual(undefined);
 
     // Add the removed item back at same position.
     if (removed) form.addItem(removed, 0);
     expect(prettyHtml(document.body.innerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/add-two-item.ux`)));
-    expect(removed?.getAttachedTo()).toEqual(form);
+    expect(removed?.attachedTo).toEqual(form);
 
     // Move an item to different place.
     if (removed) genesis.add(removed);
     expect(prettyHtml(document.body.innerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/re-attached.ux`)));
-    expect(removed?.getAttachedTo()).toEqual(undefined);
+    expect(removed?.attachedTo).toEqual(undefined);
   });
 
   test('detach and attachTo', () => {

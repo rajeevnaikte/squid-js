@@ -10,20 +10,20 @@ import { verifyDefined } from '../data/storage';
  * Communication interface between view and app model.
  */
 export class ViewModel {
-  private readonly id: string;
-  readonly state: JsonObjectType;
-  private readonly items: ViewModel[] = [];
-  private attachedTo?: ViewModel;
-  readonly domEl: CustomElement;
-  private itemsEl?: Element | null;
+  private readonly _id: string;
+  private readonly _state: JsonObjectType;
+  private readonly _items: ViewModel[] = [];
+  private readonly _domEl: CustomElement;
+  private _itemsEl?: Element | null;
+  private _attachedTo?: ViewModel;
 
   constructor (viewState: ViewState) {
     viewState.ux = kebabCase(viewState.ux);
     verifyDefined(viewState.ux);
 
-    this.id = getUniqueElId();
-    this.state = this.buildState(viewState);
-    this.domEl = this.buildDomEl(viewState);
+    this._id = getUniqueElId();
+    this._state = this.buildState(viewState);
+    this._domEl = this.buildDomEl(viewState);
   }
 
   /**
@@ -62,13 +62,13 @@ export class ViewModel {
   private buildDomEl (viewState: ViewState): CustomElement {
     const el = document.createElement(viewState.ux) as CustomElement;
     el.getData = (stateKey: string) => {
-      if (stateKey === 'id') return this.id;
-      return queryJsonPath(this.state, stateKey)?.toString() ?? '';
+      if (stateKey === 'id') return this._id;
+      return queryJsonPath(this._state, stateKey)?.toString() ?? '';
     };
     el.postRender = () => {
-      this.itemsEl = this.domEl.getElementsByTagName('items')[0];
+      this._itemsEl = this._domEl.getElementsByTagName('items')[0];
       viewState.items?.forEach(this.addItem.bind(this));
-      this.domEl.postRender = noOpNoReturn;
+      this._domEl.postRender = noOpNoReturn;
     };
     return el;
   }
@@ -80,9 +80,9 @@ export class ViewModel {
    * @param newValue
    */
   private onStateUpdate (key: string, prevValue: any, newValue: any): void {
-    Object.keys(this.domEl.onDataUpdate)
+    Object.keys(this._domEl.onDataUpdate)
       .filter(dataJsonPath => dataJsonPath === key || dataJsonPath.startsWith(`${key}.`))
-      .flatMap(dataJsonPath => this.domEl.onDataUpdate[dataJsonPath])
+      .flatMap(dataJsonPath => this._domEl.onDataUpdate[dataJsonPath])
       .forEach(updateFn => updateFn());
   }
 
@@ -93,31 +93,24 @@ export class ViewModel {
    * @param position - Optionally provide item location in the items list/array of attaching to ViewModel.
    */
   attachTo (attachTo: ViewModel, position?: number): void {
-    if (this.attachedTo) {
+    if (this._attachedTo) {
       this.detach();
     }
-    position = (position === undefined || position === null) ? attachTo.items.length : position;
+    position = (position === undefined || position === null) ? attachTo._items.length : position;
     this.attachEl(attachTo, position);
-    this.attachedTo = attachTo;
-    attachTo.items.splice(position, 0, this);
-  }
-
-  /**
-   * Get the ViewModel under whom this is attached.
-   */
-  getAttachedTo (): ViewModel | undefined {
-    return this.attachedTo;
+    this._attachedTo = attachTo;
+    attachTo._items.splice(position, 0, this);
   }
 
   /**
    * Attach dom element.
    */
   private attachEl (attachToEl: ViewModel, position: number) {
-    if (attachToEl.itemsEl) {
-      attachToEl.itemsEl.insertBefore(this.domEl, attachToEl.itemsEl.childNodes.item(position));
+    if (attachToEl._itemsEl) {
+      attachToEl._itemsEl.insertBefore(this._domEl, attachToEl._itemsEl.childNodes.item(position));
     }
     else {
-      throw new ItemsNotAllowed(attachToEl.domEl.tagName);
+      throw new ItemsNotAllowed(attachToEl._domEl.tagName);
     }
   }
 
@@ -125,13 +118,13 @@ export class ViewModel {
    * Detach the ViewModel from the app.
    */
   detach (): ViewModel {
-    this.domEl.remove();
-    if (this.attachedTo) {
-      const itemIdx = this.attachedTo.items.indexOf(this);
+    this._domEl.remove();
+    if (this._attachedTo) {
+      const itemIdx = this._attachedTo._items.indexOf(this);
       if (itemIdx > -1) {
-        this.attachedTo.items.splice(itemIdx, 1);
+        this._attachedTo._items.splice(itemIdx, 1);
       }
-      this.attachedTo = undefined;
+      this._attachedTo = undefined;
     }
     return this;
   }
@@ -155,7 +148,7 @@ export class ViewModel {
    */
   removeItem (item: number | ViewModel): ViewModel | undefined {
     if (!(item instanceof ViewModel)) {
-      item = this.items[item];
+      item = this._items[item];
     }
 
     item?.detach();
@@ -163,10 +156,31 @@ export class ViewModel {
   }
 
   /**
+   * Get the state object.
+   */
+  get state (): JsonObjectType {
+    return this._state;
+  }
+
+  /**
    * Get items attached to this ViewModel.
    */
-  getItems (): ViewModel[] {
-    return [...this.items];
+  get items (): ViewModel[] {
+    return [...this._items];
+  }
+
+  /**
+   * Get the ViewModel under whom this is attached.
+   */
+  get attachedTo (): ViewModel | undefined {
+    return this._attachedTo;
+  }
+
+  /**
+   * Get the dom element.
+   */
+  get domEl (): HTMLElement {
+    return this._domEl;
   }
 }
 
