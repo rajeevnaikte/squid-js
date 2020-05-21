@@ -1,4 +1,4 @@
-import { UXExists } from '../exceptions/errors';
+import { UXExists, UXUndefined } from '../exceptions/errors';
 import { UXComponent } from '../model/UXComponent';
 import { ComponentType } from '../model/ComponentType';
 
@@ -14,6 +14,12 @@ export const addDefinedComponent = (compName: string, compType: ComponentType, c
 export const verifyCanDefine = (compName: string): void => {
   if (Object.values(definedComponents).some(map => map.has(compName))) {
     throw new UXExists(compName);
+  }
+};
+
+export const verifyDefined = (compName: string): void => {
+  if (!Object.values(definedComponents).some(map => map.has(compName))) {
+    throw new UXUndefined(compName);
   }
 };
 

@@ -1,0 +1,9 @@
+<form-form>
+  <form class="ux-0">
+    <items class="ux-0">
+      <form-text-input>
+        <div class="ux-1">:<input type="text" name="" value="" class="ux-1"></div>
+      </form-text-input>
+    </items>
+  </form>
+</form-form>

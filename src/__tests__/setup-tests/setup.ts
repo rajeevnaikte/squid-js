@@ -1,11 +1,12 @@
 import { UX } from '../..';
 import * as utils from '../../common/utils';
+import { walkDirTree } from 'squid-node-utils';
 
 let elCount = 0;
 
 beforeAll(() => {
-  UX.add(require('../data/panel-my-panel.uxjs'));
-  UX.add(require('../data/valid.uxjs'));
+  walkDirTree(`${__dirname}/../data`)
+    .forEach(uxjs => UX.add(require(uxjs)));
 });
 
 beforeEach(() => {

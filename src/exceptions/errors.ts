@@ -23,3 +23,9 @@ export class ItemsNotAllowed extends BaseError {
     super('ITEMS_NOT_ALLOWED', `Adding items not allowed for the UX ${uxName}.`);
   }
 }
+
+export class UXUndefined extends BaseError {
+  constructor (uxName: string) {
+    super('UX_UNDEFINED', `UX '${uxName}' not defined.`);
+  }
+}

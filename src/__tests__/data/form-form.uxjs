@@ -1,0 +1,18 @@
+module.exports = {
+  name: 'form-form',
+  style() {
+
+  },
+  html() {
+    this.onDataUpdate = {};
+    const el2 = document.createElement('items');
+    el2.setAttribute('class', this.getData('id'));
+    const el3 = document.createElement('form');
+    el3.setAttribute('class', this.getData('id'));
+    el3.appendChild(el2);
+    return [el3];
+  },
+  script() {
+
+  }
+};

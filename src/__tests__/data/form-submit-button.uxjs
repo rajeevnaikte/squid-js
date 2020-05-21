@@ -1,0 +1,16 @@
+module.exports = {
+  name: 'form-submit-button',
+  style() {
+
+  },
+  html() {
+    this.onDataUpdate = {};
+    const el0 = document.createElement('button');
+    el0.setAttribute('type', 'submit');
+    el0.setAttribute('class', this.getData('id'));
+    return [el0];
+  },
+  script() {
+
+  }
+};

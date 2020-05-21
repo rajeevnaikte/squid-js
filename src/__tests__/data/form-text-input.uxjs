@@ -1,0 +1,29 @@
+module.exports = {
+  name: 'form-text-input',
+  style() {
+
+  },
+  html() {
+    this.onDataUpdate = {};
+    this.onDataUpdate['label'] = [];
+    this.onDataUpdate['name'] = [];
+    this.onDataUpdate['value'] = [];
+    const el0 = document.createTextNode(this.getData('label') + ':');
+    this.onDataUpdate['label'].push(() => el0.nodeValue = this.getData('label') + ':');
+    const el1 = document.createElement('input');
+    el1.setAttribute('type', 'text');
+    el1.setAttribute('name', this.getData('name'));
+    this.onDataUpdate['name'].push(() => el1.setAttribute('name', this.getData('name')));
+    el1.setAttribute('value', this.getData('value'));
+    this.onDataUpdate['value'].push(() => el1.setAttribute('value', this.getData('value')));
+    el1.setAttribute('class', this.getData('id'));
+    const el3 = document.createElement('div');
+    el3.setAttribute('class', this.getData('id'));
+    el3.appendChild(el0);
+    el3.appendChild(el1);
+    return [el3];
+  },
+  script() {
+
+  }
+};

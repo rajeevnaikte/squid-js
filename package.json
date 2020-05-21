@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/rajeevnaikte/squid-ui#readme",
   "dependencies": {
-    "squid-utils": "^3.0.3"
+    "squid-utils": "^3.0.4"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",
@@ -42,6 +42,7 @@
     "jest": "^25.5.4",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "js-beautify": "^1.11.0",
+    "squid-node-utils": "^1.0.2",
     "squid-uxui": "^1.0.8",
     "ts-jest": "^25.5.1",
     "ts-loader": "^7.0.4",

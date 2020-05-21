@@ -3,7 +3,7 @@ import { UXExists, UXNameNotValid } from '../exceptions/errors';
 import { addDefinedComponent, verifyCanDefine } from '../data/storage';
 import { kebabCase } from 'lodash';
 import { ComponentType } from '../model/ComponentType';
-import { emptyStringFn, emptyVoidFn } from 'squid-utils';
+import { noOpNoReturn, noOpReturnString } from 'squid-utils';
 
 /**
  * Class with static method to load/pre-process uxjs code.
@@ -31,8 +31,8 @@ export class UX {
       customElements.define(uxjs.name, class extends HTMLElement implements CustomElement {
         rendered = false;
         onDataUpdate = {};
-        getData = emptyStringFn;
-        postRender = emptyVoidFn;
+        getData = noOpReturnString;
+        postRender = noOpNoReturn;
 
         connectedCallback () {
           if (!this.rendered) {
