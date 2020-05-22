@@ -1,3 +1,5 @@
+import { ViewModel } from './ViewModel';
+
 /**
  * Configuration of the view to be rendered.
  */
@@ -14,7 +16,7 @@ export type ViewStateBase = {
   /**
    * HTML DOM listeners can be added here.
    */
-  listeners?: { [key: string]: (...params: any) => any };
+  listeners?: { [key: string]: (viewModel: ViewModel, event: Event) => void };
   /**
    * By default events will not be bubbled up.
    */

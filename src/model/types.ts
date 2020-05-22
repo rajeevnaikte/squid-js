@@ -17,3 +17,6 @@ export interface CustomElement extends HTMLElement {
   connectedCallback: () => void;
   postRender: () => void;
 }
+
+export type VoidFunction = (...params: any) => void;
+export type VoidFunctionsMap = { [event: string]: VoidFunction };

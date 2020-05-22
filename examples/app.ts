@@ -18,7 +18,13 @@ const app: ViewState = {
       value: 2
     },
     {
-      ux: 'form.submit-button'
+      ux: 'form.submit-button',
+      listeners: {
+        click: (vm, event) => {
+          console.log(vm);
+          console.log(event);
+        }
+      }
     }
   ]
 }

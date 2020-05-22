@@ -1,6 +1,6 @@
-import { JsonObjectType, noOpNoReturn } from 'squid-utils';
+import { JsonObjectType, noOpNoReturn, proxyObject } from 'squid-utils';
 import { baseViewConfigKeys, ViewState } from './ViewState';
-import { CustomElement } from './types';
+import { CustomElement, VoidFunction, VoidFunctionsMap } from './types';
 import { getUniqueElId } from '../common/utils';
 import { get as queryJsonPath, kebabCase } from 'lodash';
 import { ItemsNotAllowed } from '../exceptions/errors';
@@ -12,6 +12,8 @@ import { verifyDefined } from '../data/storage';
 export class ViewModel {
   private readonly _id: string;
   private readonly _state: JsonObjectType;
+  private readonly _bubbleEvents: boolean;
+  private readonly _listeners: VoidFunctionsMap;
   private readonly _items: ViewModel[] = [];
   private readonly _domEl: CustomElement;
   private _itemsEl?: Element | null;
@@ -24,6 +26,8 @@ export class ViewModel {
     this._id = getUniqueElId();
     this._state = this.buildState(viewState);
     this._domEl = this.buildDomEl(viewState);
+    this._bubbleEvents = viewState.bubbleEvents ?? false;
+    this._listeners = this.buildListeners(viewState);
   }
 
   /**
@@ -31,15 +35,7 @@ export class ViewModel {
    * @param viewState
    */
   private buildState (viewState: ViewState): JsonObjectType {
-    return new Proxy(this.extractState(viewState), {
-      get: (target, key, receiver) => Reflect.get(target, key, receiver),
-      set: (target, key, value, receiver): boolean => {
-        const currValue = target[key as string];
-        Reflect.set(target, key, value, receiver);
-        this.onStateUpdate(key as string, currValue, value);
-        return true;
-      }
-    });
+    return proxyObject(this.extractState(viewState), this.onStateUpdate.bind(this));
   }
 
   /**
@@ -53,6 +49,17 @@ export class ViewModel {
         dataObj[key] = viewState[key];
         return dataObj;
       }, {});
+  }
+
+  /**
+   * Build listeners object and attach to dom events.
+   */
+  buildListeners (viewState: ViewState): VoidFunctionsMap {
+    const listenerObject = proxyObject({}, this.onListenersUpdate.bind(this));
+    for (const event in viewState.listeners ?? {}) {
+      listenerObject[event] = viewState.listeners?.[event];
+    }
+    return listenerObject;
   }
 
   /**
@@ -84,6 +91,25 @@ export class ViewModel {
       .filter(dataJsonPath => dataJsonPath === key || dataJsonPath.startsWith(`${key}.`))
       .flatMap(dataJsonPath => this._domEl.onDataUpdate[dataJsonPath])
       .forEach(updateFn => updateFn());
+  }
+
+  /**
+   * When a listener is added attach it to dom.
+   */
+  onListenersUpdate (eventName: PropertyKey, prevListener: VoidFunction, newListener: VoidFunction): VoidFunction {
+    eventName = eventName as string;
+    this._domEl.removeEventListener(eventName, prevListener);
+    const listener = (event: Event) => {
+      event.stopPropagation();
+      event.preventDefault();
+      newListener(this, event);
+
+      if (this._bubbleEvents) {
+        this.attachedTo?.listeners?.[eventName as string]?.(this, event);
+      }
+    };
+    this._domEl.addEventListener(eventName, listener.bind(this));
+    return listener;
   }
 
   /**
@@ -160,6 +186,13 @@ export class ViewModel {
    */
   get state (): JsonObjectType {
     return this._state;
+  }
+
+  /**
+   * Get listeners list.
+   */
+  get listeners (): VoidFunctionsMap {
+    return this._listeners;
   }
 
   /**
