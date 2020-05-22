@@ -11,6 +11,7 @@ import { verifyDefined } from '../data/storage';
  */
 export class ViewModel {
   private readonly _id: string;
+  private readonly _ux: string;
   private readonly _state: JsonObjectType;
   private readonly _bubbleEvents: boolean;
   private readonly _listeners: VoidFunctionsMap;
@@ -20,6 +21,7 @@ export class ViewModel {
   private _attachedTo?: ViewModel;
 
   constructor (viewState: ViewState) {
+    this._ux = viewState.ux;
     viewState.ux = kebabCase(viewState.ux);
     verifyDefined(viewState.ux);
 
@@ -108,7 +110,7 @@ export class ViewModel {
         this.attachedTo?.listeners?.[eventName as string]?.(this, event);
       }
     };
-    this._domEl.addEventListener(eventName, listener.bind(this));
+    this._domEl.addEventListener(eventName, listener);
     return listener;
   }
 
@@ -160,12 +162,13 @@ export class ViewModel {
    * @param view
    * @param position - Optionally provide item location in the items list/array.
    */
-  addItem (view: ViewState | ViewModel, position?: number): void {
+  addItem (view: ViewState | ViewModel, position?: number): ViewModel {
     if (!(view instanceof ViewModel)) {
       view = new ViewModel(view);
     }
 
     view.attachTo(this, position);
+    return view as ViewModel;
   }
 
   /**
@@ -179,6 +182,20 @@ export class ViewModel {
 
     item?.detach();
     return item;
+  }
+
+  /**
+   * Get the unique id of the ViewModel.
+   */
+  get id (): string {
+    return this._id;
+  }
+
+  /**
+   * Get the ux name this ViewModel is associated with.
+   */
+  get ux (): string {
+    return this._ux;
   }
 
   /**
@@ -232,13 +249,14 @@ export class GenesisViewModel {
    * Add view tree layout from GenesisViewModel.
    * @param view
    */
-  add (view: ViewState | ViewModel): void {
+  add (view: ViewState | ViewModel): ViewModel {
     if (!(view instanceof ViewModel)) {
       view = new ViewModel(view);
     }
 
     view.detach();
     this.domEl.appendChild(view.domEl);
-    this.items.push(view);
+    this.items.push(view as ViewModel);
+    return view as ViewModel;
   }
 }

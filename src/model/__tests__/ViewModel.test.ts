@@ -141,4 +141,39 @@ describe('ViewModel', () => {
     expect(prettyHtml(document.body.innerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/add-two-item.ux`)));
   });
+
+  test('listeners', () => {
+    const eventLogs: string[] = [];
+
+    const genesis = new GenesisViewModel(document.body);
+    const form = genesis.add({
+      ux: 'form-form',
+      items: [{
+        ux: 'form-text-input'
+      }, {
+        ux: 'form-submit-button',
+        listeners: {
+          click: (vm: ViewModel, event: Event) => {
+            eventLogs.push(`${vm.id} ${event.type}`);
+          }
+        }
+      }]
+    });
+
+    document.body.getElementsByTagName('button')[0].click();
+
+    // Update listener.
+    form.items[1].listeners.click = (vm: ViewModel, event: Event) => {
+      eventLogs.push(`${event.type} ${vm.id}`);
+    }
+    document.body.getElementsByTagName('button')[0].click();
+
+    // Add new listener.
+    form.items[0].listeners.click = (vm: ViewModel, event: Event) => {
+      eventLogs.push(`${event.type} ${vm.id}`);
+    }
+    document.body.getElementsByTagName('input')[0].click();
+
+    expect(eventLogs).toEqual(['ux-2 click', 'click ux-2', 'click ux-1']);
+  });
 });

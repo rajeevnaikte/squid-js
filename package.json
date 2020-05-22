@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/rajeevnaikte/squid-ui#readme",
   "dependencies": {
-    "squid-utils": "^3.0.9"
+    "squid-utils": "^3.0.10"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",

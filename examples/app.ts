@@ -15,7 +15,13 @@ const app: ViewState = {
       ux: 'form.text-input',
       label: 'Input 2',
       name: 'input-2',
-      value: 2
+      value: 2,
+      listeners: {
+        keydown: (vm, event) => {
+          console.log(vm);
+          console.log(event);
+        }
+      }
     },
     {
       ux: 'form.submit-button',
