@@ -6,12 +6,12 @@ import { ViewModel } from './ViewModel';
  * E.g. grid view is build with multiple UX components, such as, table cell, row header, etc.
  * Abstraction of UI component code.
  */
-export type UXComponent = {
+export interface Component {
   /**
    * Build view-config object from UX components, which will be used to render the full view.
-   * @param viewConfig
+   * @param viewState
    */
-  buildViewState: (viewConfig: ViewState) => ViewState;
+  buildViewState (viewState: ViewState): ViewState;
 
   /**
    * When a state of the view is updated through view-model, then this method is called.
@@ -21,8 +21,8 @@ export type UXComponent = {
    * @param prevValue
    * @param newValue
    */
-  onStateUpdate: (viewModel: ViewModel, key: string, prevValue: any, newValue: any) => void;
+  onStateUpdate? (viewModel: ViewModel, key: string, prevValue: any, newValue: any): void;
 
-  onItemAdd?: (viewModel: ViewModel, newItem: ViewState) => void;
-  onItemRemove?: (viewModel: ViewModel, removedItem: ViewModel) => void;
+  onItemAdd? (viewModel: ViewModel, newItem: ViewState): void;
+  onItemRemove? (viewModel: ViewModel, removedItem: ViewModel): void;
 }

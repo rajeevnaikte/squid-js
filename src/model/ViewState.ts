@@ -5,8 +5,8 @@ import { ViewModel } from './ViewModel';
  */
 export type ViewStateBase = {
   /**
-   * The full UX name. i.e. namespace + filename. E.g. form.text-input or form-text-input
-   * The namespace + filename can be in any format. It will be kebabCased in the framework.
+   * The full UX name. E.g. form.text-input or form-text-input
+   * The name can be in any format. It will be kebabCased in the framework.
    */
   ux: string;
   /**
@@ -14,7 +14,7 @@ export type ViewStateBase = {
    */
   items?: ViewState[];
   /**
-   * HTML DOM listeners can be added here.
+   * CUSTOM_HTML DOM listeners can be added here.
    */
   listeners?: { [key: string]: (viewModel: ViewModel, event: Event) => void };
   /**

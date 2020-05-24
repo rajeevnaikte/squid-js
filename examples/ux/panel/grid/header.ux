@@ -1,0 +1,11 @@
+name: panel.grid.header;
+
+<style>
+  span {
+    padding: 10px;
+  }
+</style>
+
+<template>
+  <span>[label]</span>
+</template>

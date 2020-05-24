@@ -20,3 +20,7 @@ export interface CustomElement extends HTMLElement {
 
 export type VoidFunction = (...params: any) => void;
 export type VoidFunctionsMap = { [event: string]: VoidFunction };
+
+export type ClassType<T> = {
+  new (...params: any[]): T;
+}

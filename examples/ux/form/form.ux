@@ -1,4 +1,4 @@
-namespace: form;
+name: form.form;
 
 <template>
   <form>

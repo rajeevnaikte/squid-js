@@ -1,13 +1,14 @@
 import { UXExists, UXUndefined } from '../exceptions/errors';
-import { UXComponent } from '../model/UXComponent';
 import { ComponentType } from '../model/ComponentType';
+import { ClassType } from '../model/types';
+import { Component } from '../model/Component';
 
 const definedComponents = {
-  [ComponentType.HTML]: new Map<string, UXComponent | undefined>(),
-  [ComponentType.COMPOSITE]: new Map<string, UXComponent | undefined>()
+  [ComponentType.CUSTOM_HTML]: new Map<string, ClassType<Component> | undefined>(),
+  [ComponentType.COMPOSITE]: new Map<string, ClassType<Component> | undefined>()
 }
 
-export const addDefinedComponent = (compName: string, compType: ComponentType, compDef?: UXComponent): void => {
+export const addDefinedComponent = (compName: string, compType: ComponentType, compDef?: ClassType<Component>): void => {
   definedComponents[compType].set(compName, compDef);
 };
 
@@ -24,17 +25,16 @@ export const verifyDefined = (compName: string): void => {
 };
 
 export const getComponentType = (compName: string): ComponentType | undefined => {
-  for (const type in definedComponents) {
+  for (const type in ComponentType) {
     // @ts-ignore
     if (definedComponents[type].has(compName)) {
-      // @ts-ignore
-      return type;
+      return parseInt(type) as unknown as ComponentType;
     }
   }
   return undefined;
 };
 
-export const getUIComponentDef = (compName: string): UXComponent | undefined => {
+export const getComponentDef = (compName: string): ClassType<Component> | undefined => {
   for (const type in definedComponents) {
     // @ts-ignore
     const comp = definedComponents[type].get(compName);

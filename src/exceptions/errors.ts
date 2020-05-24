@@ -29,3 +29,9 @@ export class UXUndefined extends BaseError {
     super('UX_UNDEFINED', `UX '${uxName}' not defined.`);
   }
 }
+
+export class ComponentUndefined extends BaseError {
+  constructor (compName: string) {
+    super('COMP_NOT_FOUND', `Component '${compName}' not defined.`);
+  }
+}

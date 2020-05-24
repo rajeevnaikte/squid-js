@@ -1,4 +1,4 @@
-namespace: form;
+name: form.submit-button;
 
 <template>
   <button type="submit"></button>

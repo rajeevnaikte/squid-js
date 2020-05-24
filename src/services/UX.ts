@@ -1,9 +1,10 @@
-import { CustomElement, UXJSCode } from '../model/types';
+import { ClassType, CustomElement, UXJSCode } from '../model/types';
 import { UXExists, UXNameNotValid } from '../exceptions/errors';
 import { addDefinedComponent, verifyCanDefine } from '../data/storage';
 import { kebabCase } from 'lodash';
 import { ComponentType } from '../model/ComponentType';
 import { noOpNoReturn, noOpReturnString } from 'squid-utils';
+import { Component } from '../model/Component';
 
 /**
  * Class with static method to load/pre-process uxjs code.
@@ -47,7 +48,7 @@ export class UX {
         }
       });
 
-      addDefinedComponent(uxjs.name, ComponentType.HTML);
+      addDefinedComponent(uxjs.name, ComponentType.CUSTOM_HTML);
     } catch (e) {
       if (e.message?.includes('not a valid custom element name')) {
         throw new UXNameNotValid(uxjs.name);
@@ -57,5 +58,11 @@ export class UX {
       }
       throw e;
     }
+  }
+
+  static define (compName: string, compDef: ClassType<Component>): void {
+    compName = kebabCase(compName);
+    verifyCanDefine(compName);
+    addDefinedComponent(compName, ComponentType.COMPOSITE, compDef);
   }
 }

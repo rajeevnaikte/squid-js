@@ -1,4 +1,4 @@
-namespace: panel;
+name: panel.my-panel;
 
 <template>
   <div class="my-panel">

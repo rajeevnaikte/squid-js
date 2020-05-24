@@ -1,4 +1,4 @@
-namespace: form.field;
+name: form.field.textinput;
 
 <style>
   .form-group {

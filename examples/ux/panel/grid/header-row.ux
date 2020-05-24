@@ -1,0 +1,14 @@
+name: panel.grid.header-row;
+
+<style>
+  items > * {
+    margin: 2px;
+    border: 1px solid red;
+  }
+</style>
+
+<template>
+  <div>
+    <items />
+  </div>
+</template>
