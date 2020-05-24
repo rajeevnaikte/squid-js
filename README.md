@@ -1,2 +1,2 @@
-# node-template
-Template repo for NodeJS projects
+# squid-ui
+Ref: [squid-uxui](https://www.npmjs.com/package/squid-uxui)
