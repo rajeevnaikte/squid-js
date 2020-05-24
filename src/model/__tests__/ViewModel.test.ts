@@ -181,28 +181,36 @@ describe('ViewModel', () => {
   });
 
   describe('component', () => {
-    test('custom method', () => {
-      UX.define('panel.grid', class extends Component {
-        buildViewState (viewState: ViewState): ViewState[] {
-          return [{
-            ux: 'panel.grid.header-row',
-            items: viewState.headers.map((header: any) => {
-              return {
-                ux: 'panel.grid.header',
-                label: header.label
-              };
-            })
-          }];
-        }
+    const eventLogs: string[] = [];
 
-        addHeader (id: string, label: string) {
-          this.vm.items[0].addItem({
-            ux: 'panel.grid.header',
-            label: label
+    UX.define('panel.grid', class extends Component {
+      buildViewState (viewState: ViewState): ViewState[] {
+        return [{
+          ux: 'panel.grid.header-row',
+          items: viewState.headers.map((header: any) => {
+            return {
+              ux: 'panel.grid.header',
+              label: header.label
+            };
           })
-        }
-      });
+        }];
+      }
 
+      onStateUpdate (key: string, prevValue: any, newValue: any) {
+        if (key === 'header') {
+          throw 'Header update not allowed. Please call \'addHeader()\' method.';
+        }
+      }
+
+      addHeader (id: string, label: string) {
+        this.vm.items[0].addItem({
+          ux: 'panel.grid.header',
+          label: label
+        })
+      }
+    });
+
+    const renderGrid = () => {
       const app: ViewState = {
         ux: 'panel.grid',
         headers: [{
@@ -218,14 +226,37 @@ describe('ViewModel', () => {
         }, {
           name: 'Jessie',
           profession: 'Cook'
-        }]
+        }],
+        listeners: {
+          click: (vm, e) => {
+            eventLogs.push(vm.ux);
+          }
+        }
       };
 
       const appView = UI.render(app);
-      appView.items[0].comp.addHeader('education', 'Education');
+      const gridCom = appView.items[0].comp;
+
+      return gridCom;
+    }
+
+    test('custom method', () => {
+      renderGrid().addHeader('education', 'Education');
 
       expect(prettyHtml(document.body.innerHTML))
         .toEqual(prettyHtml(readFile(`${__dirname}/expected/grid-component.ux`)));
+    });
+
+    test('listener', () => {
+      renderGrid();
+      document.getElementsByTagName('panel-grid-header')[0]
+        .getElementsByTagName('span')[0].click()
+      expect(eventLogs).toEqual(['panel.grid']);
+    });
+
+    test('state update', () => {
+      expect(() => renderGrid().vm.state.header = [])
+        .toThrow('Header update not allowed. Please call \'addHeader()\' method.');
     });
   });
 });

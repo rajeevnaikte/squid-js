@@ -7,6 +7,7 @@ import { ViewModel } from './ViewModel';
  * Abstraction of UI component code.
  */
 export abstract class Component {
+  [key: string]: any;
   /**
    * ViewModel object of this component instance.
    */
@@ -31,8 +32,6 @@ export abstract class Component {
    * @param newValue
    */
   onStateUpdate? (key: string, prevValue: any, newValue: any): void;
-
-  [key: string]: any;
 }
 
 export type ComponentImplType = {
