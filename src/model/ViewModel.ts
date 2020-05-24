@@ -6,6 +6,7 @@ import { get as queryJsonPath, kebabCase } from 'lodash';
 import { ComponentUndefined, ItemsNotAllowed } from '../exceptions/errors';
 import { getComponentDef, getComponentType, verifyDefined } from '../data/storage';
 import { ComponentType } from './ComponentType';
+import { Component } from './Component';
 
 /**
  * Communication interface between view and app model.
@@ -20,6 +21,7 @@ export class ViewModel {
   private readonly _domEl: HTMLElement;
   private _itemsEl?: Element | null;
   private _attachedTo?: ViewModel;
+  private _comp?: Component;
 
   constructor (viewState: ViewState) {
     this._ux = viewState.ux;
@@ -28,10 +30,10 @@ export class ViewModel {
     const compType = getComponentType(viewState.ux) as ComponentType;
 
     this._id = getUniqueElId();
-    this._state = this.buildState(viewState);
     this._domEl = this.buildDomEl(viewState, compType);
     this.addInitialItems(viewState, compType);
 
+    this._state = this.buildState(viewState, compType);
     this._bubbleEvents = viewState.bubbleEvents ?? false;
     this._listeners = this.buildListeners(viewState);
   }
@@ -40,8 +42,14 @@ export class ViewModel {
    * Build state object with setter to fire onStateUpdate event.
    * @param viewState
    */
-  private buildState (viewState: ViewState): JsonObjectType {
-    return proxyObject(this.extractState(viewState), this.onStateUpdate.bind(this));
+  private buildState (viewState: ViewState, compType: ComponentType): JsonObjectType {
+    const state = this.extractState(viewState);
+    if (compType === ComponentType.COMPOSITE) {
+      return proxyObject(state, this._comp?.onStateUpdate?.bind(this));
+    }
+    else {
+      return proxyObject(state, this.onStateUpdate.bind(this));
+    }
   }
 
   /**
@@ -86,13 +94,14 @@ export class ViewModel {
     }
   }
 
-  addInitialItems (viewState: ViewState, compType: ComponentType): void {
+  private addInitialItems (viewState: ViewState, compType: ComponentType): void {
     if (compType === ComponentType.COMPOSITE) {
       this._itemsEl = document.createElement('items');
       this._domEl.appendChild(this._itemsEl);
       const compDef = getComponentDef(viewState.ux);
       if (!compDef) throw new ComponentUndefined(viewState.ux);
-      this.addItem(new compDef().buildViewState(viewState));
+      this._comp = new compDef(this);
+      this._comp.buildViewState(viewState)?.forEach(this.addItem.bind(this));
     }
     else {
       (this._domEl as CustomElement).postRender = () => {
@@ -119,7 +128,7 @@ export class ViewModel {
   /**
    * When a listener is added attach it to dom.
    */
-  onListenersUpdate (eventName: PropertyKey, prevListener: VoidFunction, newListener: VoidFunction): VoidFunction {
+  private onListenersUpdate (eventName: PropertyKey, prevListener: VoidFunction, newListener: VoidFunction): VoidFunction {
     eventName = eventName as string;
     this._domEl.removeEventListener(eventName, prevListener);
     const listener = (event: Event) => {
@@ -215,7 +224,7 @@ export class ViewModel {
   /**
    * Get the state object.
    */
-  get state (): JsonObjectType {
+  get state (): { [key: string]: any } {
     return this._state;
   }
 
@@ -246,17 +255,24 @@ export class ViewModel {
   get domEl (): HTMLElement {
     return this._domEl;
   }
+
+  /**
+   * Get component if the ViewModel type is composite component.
+   */
+  get comp (): Component {
+    return this._comp as Component;
+  }
 }
 
 /**
  * Get Genesis ViewModel.
  */
 export class GenesisViewModel {
-  private readonly domEl: HTMLElement;
-  private readonly items: ViewModel[] = [];
+  private readonly _domEl: HTMLElement;
+  private readonly _items: ViewModel[] = [];
 
   constructor (rootEl: HTMLElement) {
-    this.domEl = rootEl;
+    this._domEl = rootEl;
   }
 
   /**
@@ -269,8 +285,15 @@ export class GenesisViewModel {
     }
 
     view.detach();
-    this.domEl.appendChild(view.domEl);
-    this.items.push(view as ViewModel);
+    this._domEl.appendChild(view.domEl);
+    this._items.push(view as ViewModel);
     return view as ViewModel;
+  }
+
+  /**
+   * Get ViewModels added into this GenesisViewModel.
+   */
+  get items (): ViewModel[] {
+    return this._items;
   }
 }

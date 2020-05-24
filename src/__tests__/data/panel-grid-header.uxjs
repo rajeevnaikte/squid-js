@@ -1,0 +1,22 @@
+module.exports = {
+  name: 'panel-grid-header',
+  style() {
+    const el0 = document.createTextNode('span.' + this.getData('id') + '{     padding: 10px;   }');
+    const el1 = document.createElement('style');
+    el1.setAttribute('class', this.getData('id'));
+    el1.appendChild(el0);
+    return [el1];
+  },
+  html() {
+    this.onDataUpdate['label'] = [];
+    const el2 = document.createTextNode(this.getData('label'));
+    this.onDataUpdate['label'].push(() => el2.nodeValue = this.getData('label'));
+    const el3 = document.createElement('span');
+    el3.setAttribute('class', this.getData('id'));
+    el3.appendChild(el2);
+    return [el3];
+  },
+  script() {
+
+  }
+};

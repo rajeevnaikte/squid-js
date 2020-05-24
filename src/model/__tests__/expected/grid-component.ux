@@ -1,0 +1,37 @@
+<panel-grid>
+  <items>
+    <panel-grid-header-row>
+      <style class="ux-1">
+        items.ux-1>* {
+          margin: 2px;
+          border: 1px solid red;
+        }
+      </style>
+      <div class="ux-1">
+        <items class="ux-1">
+          <panel-grid-header>
+            <style class="ux-2">
+              span.ux-2 {
+                padding: 10px;
+              }
+            </style><span class="ux-2">Name</span>
+          </panel-grid-header>
+          <panel-grid-header>
+            <style class="ux-3">
+              span.ux-3 {
+                padding: 10px;
+              }
+            </style><span class="ux-3">Profession</span>
+          </panel-grid-header>
+          <panel-grid-header>
+            <style class="ux-4">
+              span.ux-4 {
+                padding: 10px;
+              }
+            </style><span class="ux-4">Education</span>
+          </panel-grid-header>
+        </items>
+      </div>
+    </panel-grid-header-row>
+  </items>
+</panel-grid>

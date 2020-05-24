@@ -1,4 +1,4 @@
-import { ClassType, CustomElement, UXJSCode } from '../model/types';
+import { CustomElement, UXJSCode } from '../model/types';
 import { UXExists, UXNameNotValid } from '../exceptions/errors';
 import { addDefinedComponent, verifyCanDefine } from '../data/storage';
 import { kebabCase } from 'lodash';
@@ -60,7 +60,7 @@ export class UX {
     }
   }
 
-  static define (compName: string, compDef: ClassType<Component>): void {
+  static define (compName: string, compDef: typeof Component.constructor): void {
     compName = kebabCase(compName);
     verifyCanDefine(compName);
     addDefinedComponent(compName, ComponentType.COMPOSITE, compDef);

@@ -1,6 +1,9 @@
 import { GenesisViewModel, ViewModel } from '../ViewModel';
 import { html as prettyHtml } from 'js-beautify';
 import { readFile } from 'squid-node-utils';
+import { UI, UX } from '../..';
+import { Component } from '../Component';
+import { ViewState } from '../ViewState';
 
 describe('ViewModel', () => {
   test('GenesisViewModel', async () => {
@@ -175,5 +178,54 @@ describe('ViewModel', () => {
     document.body.getElementsByTagName('input')[0].click();
 
     expect(eventLogs).toEqual(['ux-2 click', 'click ux-2', 'click ux-1']);
+  });
+
+  describe('component', () => {
+    test('custom method', () => {
+      UX.define('panel.grid', class extends Component {
+        buildViewState (viewState: ViewState): ViewState[] {
+          return [{
+            ux: 'panel.grid.header-row',
+            items: viewState.headers.map((header: any) => {
+              return {
+                ux: 'panel.grid.header',
+                label: header.label
+              };
+            })
+          }];
+        }
+
+        addHeader (id: string, label: string) {
+          this.vm.items[0].addItem({
+            ux: 'panel.grid.header',
+            label: label
+          })
+        }
+      });
+
+      const app: ViewState = {
+        ux: 'panel.grid',
+        headers: [{
+          id: 'name',
+          label: 'Name'
+        }, {
+          id: 'profession',
+          label: 'Profession'
+        }],
+        data: [{
+          name: 'Chaglar',
+          profession: 'Cafe owner'
+        }, {
+          name: 'Jessie',
+          profession: 'Cook'
+        }]
+      };
+
+      const appView = UI.render(app);
+      appView.items[0].comp.addHeader('education', 'Education');
+
+      expect(prettyHtml(document.body.innerHTML))
+        .toEqual(prettyHtml(readFile(`${__dirname}/expected/grid-component.ux`)));
+    });
   });
 });
