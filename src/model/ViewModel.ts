@@ -25,10 +25,13 @@ export class ViewModel {
     this._ux = viewState.ux;
     viewState.ux = kebabCase(viewState.ux);
     verifyDefined(viewState.ux);
+    const compType = getComponentType(viewState.ux) as ComponentType;
 
     this._id = getUniqueElId();
     this._state = this.buildState(viewState);
-    this._domEl = this.buildDomEl(viewState);
+    this._domEl = this.buildDomEl(viewState, compType);
+    this.addInitialItems(viewState, compType);
+
     this._bubbleEvents = viewState.bubbleEvents ?? false;
     this._listeners = this.buildListeners(viewState);
   }
@@ -69,19 +72,9 @@ export class ViewModel {
    * Build the custom element of the ux.
    * @param viewState
    */
-  private buildDomEl (viewState: ViewState): HTMLElement {
-    const compType = getComponentType(viewState.ux)
-
+  private buildDomEl (viewState: ViewState, compType: ComponentType): HTMLElement {
     if (compType === ComponentType.COMPOSITE) {
-      const el = document.createElement(viewState.ux);
-      this._itemsEl = document.createElement('items');
-      el.appendChild(this._itemsEl);
-
-      const compDef = getComponentDef(viewState.ux);
-      if (!compDef) throw new ComponentUndefined(viewState.ux);
-
-      this.addItem(new compDef().buildViewState(viewState));
-      return el;
+      return document.createElement(viewState.ux);
     }
     else {
       const el = document.createElement(viewState.ux) as CustomElement;
@@ -89,12 +82,24 @@ export class ViewModel {
         if (stateKey === 'id') return this._id;
         return queryJsonPath(this._state, stateKey)?.toString() ?? '';
       };
-      el.postRender = () => {
+      return el;
+    }
+  }
+
+  addInitialItems (viewState: ViewState, compType: ComponentType): void {
+    if (compType === ComponentType.COMPOSITE) {
+      this._itemsEl = document.createElement('items');
+      this._domEl.appendChild(this._itemsEl);
+      const compDef = getComponentDef(viewState.ux);
+      if (!compDef) throw new ComponentUndefined(viewState.ux);
+      this.addItem(new compDef().buildViewState(viewState));
+    }
+    else {
+      (this._domEl as CustomElement).postRender = () => {
         this._itemsEl = this._domEl.getElementsByTagName('items')[0];
         viewState.items?.forEach(this.addItem.bind(this));
         (this._domEl as CustomElement).postRender = noOpNoReturn;
       };
-      return el;
     }
   }
 
