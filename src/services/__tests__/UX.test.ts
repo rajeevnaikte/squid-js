@@ -5,6 +5,7 @@ import { readFile } from 'ts-loader/dist/utils';
 describe('UX', () => {
   test('add uxjs', async () => {
     const el = document.createElement('form-field-valid') as CustomElement;
+    el.setAttribute('class', 'ux-0');
     el.getData = (att) => (att === 'id') ? 'ux-0' : '';
     document.body.append(el);
 

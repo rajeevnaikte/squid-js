@@ -1,10 +1,10 @@
-<form-form>
+<form-form class="ux-0">
   <form class="ux-0">
     <items class="ux-0">
-      <form-text-input>
+      <form-text-input class="ux-1">
         <div class="ux-1">:<input type="text" name="" value="" class="ux-1"></div>
       </form-text-input>
-      <form-text-input>
+      <form-text-input class="ux-2">
         <div class="ux-2">:<input type="text" name="" value="" class="ux-2"></div>
       </form-text-input>
     </items>

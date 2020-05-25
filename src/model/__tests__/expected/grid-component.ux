@@ -1,6 +1,6 @@
-<panel-grid>
+<panel-grid class="ux-0">
   <items>
-    <panel-grid-header-row>
+    <panel-grid-header-row class="ux-1">
       <style class="ux-1">
         items.ux-1>* {
           margin: 2px;
@@ -9,21 +9,21 @@
       </style>
       <div class="ux-1">
         <items class="ux-1">
-          <panel-grid-header>
+          <panel-grid-header class="ux-2">
             <style class="ux-2">
               span.ux-2 {
                 padding: 10px;
               }
             </style><span class="ux-2">Name</span>
           </panel-grid-header>
-          <panel-grid-header>
+          <panel-grid-header class="ux-3">
             <style class="ux-3">
               span.ux-3 {
                 padding: 10px;
               }
             </style><span class="ux-3">Profession</span>
           </panel-grid-header>
-          <panel-grid-header>
+          <panel-grid-header class="ux-4">
             <style class="ux-4">
               span.ux-4 {
                 padding: 10px;

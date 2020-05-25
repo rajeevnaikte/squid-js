@@ -1,7 +1,7 @@
-<panel-my-panel>
+<panel-my-panel class="ux-0">
   <div class="my-panel ux-0">
     <items class="ux-0">
-      <form-field-valid>
+      <form-field-valid class="ux-1">
         <style class="ux-1">.form-group.ux-1 {
           color: red;
         }
