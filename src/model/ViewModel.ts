@@ -82,10 +82,13 @@ export class ViewModel {
    */
   private buildDomEl (viewState: ViewState, compType: ComponentType): HTMLElement {
     if (compType === ComponentType.COMPOSITE) {
-      return document.createElement(viewState.ux);
+      const el = document.createElement(viewState.ux);
+      el.setAttribute('class', this._id);
+      return el;
     }
     else {
       const el = document.createElement(viewState.ux) as CustomElement;
+      el.setAttribute('class', this._id);
       el.getData = (stateKey: string) => {
         if (stateKey === 'id') return this._id;
         return queryJsonPath(this._state, stateKey)?.toString() ?? '';
