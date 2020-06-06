@@ -1,9 +1,5 @@
-<form-form class="ux-0">
-  <form class="ux-0">
-    <items class="ux-0">
-      <form-text-input class="ux-2">
-        <div class="ux-2">:<input type="text" name="" value="" class="ux-2"></div>
-      </form-text-input>
-    </items>
-  </form>
-</form-form>
+<form class="ux-0" data-name="form-form">
+  <div class="items">
+    <div class="ux-2" data-name="form-text-input">:<input type="text" name="" value="" class="ux-2"></div>
+  </div>
+</form>

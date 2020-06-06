@@ -1,4 +1,4 @@
-import { Component, UI, UX, ViewState } from 'squid-ui';
+import { Component, UI, UX, ViewState } from '../src';
 
 UX.define('panel.grid', class extends Component {
   buildViewState (viewState: ViewState): ViewState[] {

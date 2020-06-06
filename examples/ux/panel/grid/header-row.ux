@@ -8,5 +8,5 @@ name: panel.grid.header-row;
 </style>
 
 <div>
-    <items />
-  </div>
+  <items/>
+</div>

@@ -14,7 +14,10 @@ module.exports = {
     const el3 = document.createElement('span');
     el3.setAttribute('class', this.getData('id'));
     el3.appendChild(el2);
-    return [el3];
+    const el4 = document.createElement('span');
+    el4.setAttribute('class', this.getData('id'));
+    el4.appendChild(el3);
+    return [el4];
   },
   script() {
 

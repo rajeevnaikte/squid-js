@@ -1,28 +1,26 @@
-<panel-my-panel class="ux-0">
-  <div class="my-panel ux-0">
-    <items class="ux-0">
-      <form-field-valid class="ux-1">
-        <style class="ux-1">.form-group.ux-1 {
-          color: red;
-        }
+<div class="my-panel ux-0" data-name="panel-my-panel">
+  <div class="items">
+    <div class="form-group ux-1" data-name="form-field-valid">
+      <style class="ux-1">.form-group.ux-1 {
+        color: red;
+      }
 
-        #ux123.ux-1 {
-          padding: 10px;
-        }
+      #ux123.ux-1 {
+        padding: 10px;
+      }
 
-        #ux123.ux-1 .some-class.ux-1 {
-          color: red;
-        }
+      #ux123.ux-1 .some-class.ux-1 {
+        color: red;
+      }
 
-        .some-class.some-class2.ux-1, .some-class.some-class3.ux-1, .some-class.some-class4.ux-1 {
-          border: 1px solid red;
-        }</style>
-        <div class="form-group ux-1"><label for="" class="ux-1"></label>test<input type="email"
-                                                                                   class="form-control ux-1" id=""
-                                                                                   aria-describedby="emailHelp"
-                                                                                   placeholder="">test2<br class="ux-1"><small
-            id="emailHelp" class="form-text text-muted ux-1"></small></div>
-      </form-field-valid>
-    </items>
+      .some-class.some-class2.ux-1, .some-class.some-class3.ux-1, .some-class.some-class4.ux-1 {
+        border: 1px solid red;
+      }</style><label for="" class="ux-1"></label>test<input type="email"
+                                                    class="form-control ux-1" id=""
+                                                    aria-describedby="emailHelp"
+                                                    placeholder="">test2<br
+        class="ux-1"><small
+        id="emailHelp" class="form-text text-muted ux-1"></small>
+    </div>
   </div>
-</panel-my-panel>
+</div>

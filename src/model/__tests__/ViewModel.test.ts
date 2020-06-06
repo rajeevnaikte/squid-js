@@ -4,6 +4,7 @@ import { readFile } from 'squid-node-utils';
 import { UI, UX } from '../..';
 import { Component } from '../Component';
 import { ViewState } from '../ViewState';
+import { Config } from '../../configurations/configuration';
 
 describe('ViewModel', () => {
   test('GenesisViewModel', async () => {
@@ -249,8 +250,9 @@ describe('ViewModel', () => {
 
     test('listener', () => {
       renderGrid();
-      document.getElementsByTagName('panel-grid-header')[0]
-        .getElementsByTagName('span')[0].click()
+      Array.from(document.getElementsByTagName('span'))
+        .find(el => el.getAttribute(Config.UX_NAME_ATTRIB) === 'panel-grid-header')
+        ?.getElementsByTagName('span')[0].click()
       expect(eventLogs).toEqual(['panel.grid']);
     });
 

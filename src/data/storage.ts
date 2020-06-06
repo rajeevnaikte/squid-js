@@ -1,13 +1,18 @@
 import { UXExists, UXUndefined } from '../exceptions/errors';
 import { ComponentType } from '../model/ComponentType';
 import { Component, ComponentImplType } from '../model/Component';
+import { UXJSCode } from '../model/types';
 
 const definedComponents = {
-  [ComponentType.CUSTOM_HTML]: new Map<string, typeof Component.constructor | undefined>(),
-  [ComponentType.COMPOSITE]: new Map<string, typeof Component.constructor | undefined>()
+  [ComponentType.HTML]: new Map<string, typeof Component.constructor | UXJSCode>(),
+  [ComponentType.COMPOSITE]: new Map<string, typeof Component.constructor | UXJSCode>()
 };
 
-export const addDefinedComponent = (compName: string, compType: ComponentType, compDef?: typeof Component.constructor): void => {
+export const addDefinedComponent = (
+  compName: string,
+  compType: ComponentType,
+  compDef: typeof Component.constructor | UXJSCode
+): void => {
   definedComponents[compType].set(compName, compDef);
 };
 
@@ -33,7 +38,7 @@ export const getComponentType = (compName: string): ComponentType | undefined =>
   return undefined;
 };
 
-export const getComponentDef = (compName: string): ComponentImplType | undefined => {
+export const getComponentDef = (compName: string): ComponentImplType | UXJSCode | undefined => {
   for (const type in definedComponents) {
     // @ts-ignore
     const comp = definedComponents[type].get(compName);

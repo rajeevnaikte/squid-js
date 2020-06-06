@@ -7,4 +7,4 @@ name: panel.grid.header;
 </style>
 
 
-  <span>[label]</span>
+<span><span>[label]</span></span>

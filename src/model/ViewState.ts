@@ -14,7 +14,7 @@ export type ViewStateBase = {
    */
   items?: ViewState[];
   /**
-   * CUSTOM_HTML DOM listeners can be added here.
+   * HTML DOM listeners can be added here.
    */
   listeners?: { [key: string]: (viewModel: ViewModel, event: Event) => void };
   /**

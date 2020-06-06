@@ -1,12 +1,13 @@
 import { JsonObjectType, noOpNoReturn, proxyObject } from 'squid-utils';
 import { baseViewConfigKeys, ViewState } from './ViewState';
-import { CustomElement, VoidFunction, VoidFunctionsMap } from './types';
+import { CustomElement, UXJSCode, VoidFunction, VoidFunctionsMap } from './types';
 import { getUniqueElId } from '../common/utils';
 import { get as queryJsonPath, kebabCase } from 'lodash';
 import { ComponentUndefined, ItemsNotAllowed } from '../exceptions/errors';
 import { getComponentDef, getComponentType, verifyDefined } from '../data/storage';
 import { ComponentType } from './ComponentType';
-import { Component } from './Component';
+import { Component, ComponentImplType } from './Component';
+import { Config } from '../configurations/configuration';
 
 /**
  * Communication interface between view and app model.
@@ -14,7 +15,7 @@ import { Component } from './Component';
 export class ViewModel {
   private readonly _id: string;
   private readonly _ux: string;
-  private readonly _state: JsonObjectType;
+  private _state?: JsonObjectType;
   private readonly _bubbleEvents: boolean;
   private readonly _listeners: VoidFunctionsMap;
   private readonly _items: ViewModel[] = [];
@@ -31,9 +32,7 @@ export class ViewModel {
 
     this._id = getUniqueElId();
     this._domEl = this.buildDomEl(viewState, compType);
-    this.addInitialItems(viewState, compType);
 
-    this._state = this.buildState(viewState, compType);
     this._bubbleEvents = viewState.bubbleEvents ?? false;
     this._listeners = this.buildListeners(viewState);
   }
@@ -82,36 +81,53 @@ export class ViewModel {
    */
   private buildDomEl (viewState: ViewState, compType: ComponentType): HTMLElement {
     if (compType === ComponentType.COMPOSITE) {
-      const el = document.createElement(viewState.ux);
+      const el = document.createElement('div');
       el.setAttribute('class', this._id);
-      return el;
-    }
-    else {
-      const el = document.createElement(viewState.ux) as CustomElement;
-      el.setAttribute('class', this._id);
-      el.getData = (stateKey: string) => {
-        if (stateKey === 'id') return this._id;
-        return queryJsonPath(this._state, stateKey)?.toString() ?? '';
-      };
-      return el;
-    }
-  }
-
-  private addInitialItems (viewState: ViewState, compType: ComponentType): void {
-    if (compType === ComponentType.COMPOSITE) {
-      this._itemsEl = document.createElement('items');
-      this._domEl.appendChild(this._itemsEl);
-      const compDef = getComponentDef(viewState.ux);
+      el.setAttribute(Config.UX_NAME_ATTRIB, viewState.ux);
+      const compDef = getComponentDef(viewState.ux) as ComponentImplType;
       if (!compDef) throw new ComponentUndefined(viewState.ux);
       this._comp = new compDef(this);
-      this._comp.buildViewState(viewState)?.forEach(this.addItem.bind(this));
+      this._itemsEl = document.createElement('div');
+      this._itemsEl.setAttribute('class', 'items');
+      el.appendChild(this._itemsEl);
+      this._comp?.buildViewState(viewState)?.forEach(this.addItem.bind(this));
+      this._state = this.buildState(viewState, compType);
+      return el;
     }
     else {
-      (this._domEl as CustomElement).postRender = () => {
-        this._itemsEl = this._domEl.getElementsByTagName('items')[0];
-        viewState.items?.forEach(this.addItem.bind(this));
-        (this._domEl as CustomElement).postRender = noOpNoReturn;
+      this._state = this.buildState(viewState, compType);
+      const uxjsCode = getComponentDef(viewState.ux) as UXJSCode;
+      const elBindings = {
+        onDataUpdate: {},
+        getData: (stateKey: string) => {
+          if (stateKey === 'id') return this._id;
+          return queryJsonPath(this._state, stateKey)?.toString() ?? '';
+        },
+        postRender: () => {
+          const itemsEl = this._domEl.getElementsByTagName('items')[0];
+          if (itemsEl) {
+            this._itemsEl = document.createElement('div');
+            this._itemsEl.setAttribute('class', 'items');
+            itemsEl?.parentElement?.replaceChild(this._itemsEl, itemsEl);
+          }
+          viewState.items?.forEach(this.addItem.bind(this));
+          (this._domEl as CustomElement).postRender = noOpNoReturn;
+        }
       };
+
+      const el = uxjsCode.html.bind(elBindings)()[0] as CustomElement;
+      el.setAttribute(Config.UX_NAME_ATTRIB, viewState.ux);
+      Object.assign(el, elBindings);
+
+      const styles = uxjsCode.style.bind(el)();
+      if (styles) styles.forEach(style => {
+        style.textContent = style.textContent?.replace(/(?:^|\s)items(?=\s|\.)/g, ' div.items') ?? null;
+        el.insertBefore(style, el.childNodes[0]);
+      });
+
+      uxjsCode.script.bind(el)();
+
+      return el;
     }
   }
 
@@ -155,7 +171,7 @@ export class ViewModel {
    */
   attachTo (attachTo: ViewModel, position?: number): void {
     if (!attachTo._itemsEl) {
-      throw new ItemsNotAllowed(attachTo._domEl.tagName);
+      throw new ItemsNotAllowed(attachTo._domEl.getAttribute(Config.UX_NAME_ATTRIB) ?? '');
     }
 
     if (this._attachedTo) {
@@ -163,6 +179,7 @@ export class ViewModel {
     }
     position = (position === undefined || position === null) ? attachTo._items.length : position;
     attachTo._itemsEl.insertBefore(this._domEl, attachTo._itemsEl.childNodes.item(position));
+    (this._domEl as CustomElement).postRender?.();
     this._attachedTo = attachTo;
     attachTo._items.splice(position, 0, this);
   }
@@ -228,7 +245,7 @@ export class ViewModel {
    * Get the state object.
    */
   get state (): { [key: string]: any } {
-    return this._state;
+    return this._state as NonNullable<{ [key: string]: any }>;
   }
 
   /**
@@ -289,6 +306,7 @@ export class GenesisViewModel {
 
     view.detach();
     this._domEl.appendChild(view.domEl);
+    (view.domEl as CustomElement).postRender?.();
     this._items.push(view as ViewModel);
     return view as ViewModel;
   }

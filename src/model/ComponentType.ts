@@ -1,4 +1,4 @@
 export enum ComponentType {
-  CUSTOM_HTML,
+  HTML,
   COMPOSITE
 }

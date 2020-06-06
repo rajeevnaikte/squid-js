@@ -25,7 +25,7 @@ describe('UI', () => {
           ux: 'form-field-valid'
         }]
       });
-    })).rejects.toThrow(new ItemsNotAllowed('FORM-FIELD-VALID'));
+    })).rejects.toThrow(new ItemsNotAllowed('form-field-valid'));
   });
 
   test('add component items', async () => {
