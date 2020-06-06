@@ -1,7 +1,5 @@
 name: form.form;
 
-<template>
-  <form>
-    <items />
-  </form>
-</template>
+<form>
+  <items/>
+</form>

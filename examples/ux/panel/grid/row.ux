@@ -1,0 +1,5 @@
+name: panel.grid.row;
+
+<div>
+    <items />
+  </div>

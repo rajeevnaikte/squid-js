@@ -1,0 +1,10 @@
+name: panel.grid.cell;
+
+<style>
+  span {
+    padding: 10px;
+    margin: 10px;
+  }
+</style>
+
+<span>[value]</span>

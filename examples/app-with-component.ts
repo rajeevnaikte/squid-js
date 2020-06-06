@@ -1,25 +1,50 @@
-import { UI, UX } from '../src';
-import { Component } from '../src/model/Component';
-import { ViewState } from '../src/model/ViewState';
+import { Component, UI, UX, ViewState } from 'squid-ui';
 
 UX.define('panel.grid', class extends Component {
   buildViewState (viewState: ViewState): ViewState[] {
     return [{
-      ux: 'panel.grid.header-row',
-      items: viewState.headers.map((header: any) => {
+      ux: 'panel.grid.container',
+      items: [{
+        ux: 'panel.grid.header-row',
+        items: viewState.headers.map((header: any) => {
+          return {
+            ux: 'panel.grid.header',
+            label: header.label
+          };
+        })
+      }, ...viewState.data.map((row: any) => {
         return {
-          ux: 'panel.grid.header',
-          label: header.label
+          ux: 'panel.grid.row',
+          items: [{
+            ux: 'panel.grid.cell',
+            value: row.name
+          }, {
+            ux: 'panel.grid.cell',
+            value: row.profession
+          }]
         };
-      })
+      })]
     }];
   }
 
   addHeader (id: string, label: string) {
-    this.vm.items[0].addItem({
+    this.vm.items[0].items[0].addItem({
       ux: 'panel.grid.header',
       label: label
-    })
+    });
+  }
+
+  addRow (name: string, profession: string) {
+    this.vm.items[0].addItem({
+      ux: 'panel.grid.row',
+      items: [{
+        ux: 'panel.grid.cell',
+        value: name
+      }, {
+        ux: 'panel.grid.cell',
+        value: profession
+      }]
+    });
   }
 });
 
@@ -42,4 +67,6 @@ const app: ViewState = {
 };
 
 const appView = UI.render(app);
-appView.items[0].comp.addHeader('education', 'Education');
+const grid = appView.items[0].comp;
+grid.addHeader('education', 'Education');
+grid.addRow('Rajeev', 'SW');

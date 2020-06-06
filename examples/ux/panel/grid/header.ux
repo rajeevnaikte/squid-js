@@ -6,6 +6,5 @@ name: panel.grid.header;
   }
 </style>
 
-<template>
+
   <span>[label]</span>
-</template>

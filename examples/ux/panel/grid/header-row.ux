@@ -7,8 +7,6 @@ name: panel.grid.header-row;
   }
 </style>
 
-<template>
-  <div>
+<div>
     <items />
   </div>
-</template>

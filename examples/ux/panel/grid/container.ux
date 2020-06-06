@@ -1,0 +1,11 @@
+name: panel.grid.container;
+
+<style>
+    panel-grid-header span, panel-grid-cell span {
+        width: 100px;
+    }
+</style>
+
+<div>
+        <items />
+    </div>

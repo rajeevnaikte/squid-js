@@ -1,7 +1,5 @@
 name: panel.my-panel;
 
-<template>
-  <div class="my-panel">
+<div class="my-panel">
     <items/>
   </div>
-</template>
