@@ -1,6 +1,6 @@
 {
-  "name": "squid-js",
-  "version": "1.2.1",
+  "name": "squid-ui",
+  "version": "1.2.0",
   "description": "UI Framework with JSON style",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
