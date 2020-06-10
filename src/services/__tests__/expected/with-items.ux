@@ -1,6 +1,6 @@
-<div class="my-panel ux-0" data-name="panel-my-panel">
+<div class="my-panel ux-0" ux="panel-my-panel">
   <div class="items">
-    <div class="form-group ux-1" data-name="form-field-valid">
+    <div class="form-group ux-1" ux="form-field-valid">
       <style class="ux-1">.form-group.ux-1 {
         color: red;
       }

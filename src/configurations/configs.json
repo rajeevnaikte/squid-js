@@ -1,4 +1,4 @@
 {
   "ENV": "dev",
-  "UX_NAME_ATTRIB": "data-name"
+  "UX_NAME_ATTRIB": "ux"
 }

@@ -1,4 +1,4 @@
-<div class="form-group ux-0" data-name="form-field-valid">
+<div class="form-group ux-0" ux="form-field-valid">
   <style class="ux-0">
     .form-group.ux-0 {
       color: red;

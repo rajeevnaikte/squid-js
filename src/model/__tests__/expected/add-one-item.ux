@@ -1,5 +1,5 @@
-<form class="ux-0" data-name="form-form">
+<form class="ux-0" ux="form-form">
   <div class="items">
-    <div class="ux-1" data-name="form-text-input">:<input type="text" name="" value="" class="ux-1"></div>
+    <div class="ux-1" ux="form-text-input">:<input type="text" name="" value="" class="ux-1"></div>
   </div>
 </form>
