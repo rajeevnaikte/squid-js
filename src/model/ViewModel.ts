@@ -282,6 +282,51 @@ export class ViewModel {
   get comp (): Component {
     return this._comp as Component;
   }
+
+  /**
+   * Find closes ancestor of given ux type
+   * @param uxType
+   */
+  up (uxType: string): ViewModel | undefined {
+    uxType = kebabCase(uxType);
+
+    let upViewModel = this._attachedTo;
+    while (upViewModel && upViewModel._ux !== uxType) {
+      upViewModel = upViewModel._attachedTo;
+    }
+
+    return upViewModel;
+  }
+
+  /**
+   * Find closes ancestor of given ux type
+   * @param uxType
+   */
+  down (uxType: string): ViewModel[] | undefined {
+    uxType = kebabCase(uxType);
+
+    let downViewModels = this._items;
+    while (downViewModels.length > 0) {
+      const requiredViewModels: ViewModel[] = [];
+      for (const downViewModel of downViewModels) {
+        if (downViewModel.ux === uxType) {
+          requiredViewModels.push(downViewModel);
+        }
+      }
+
+      if (requiredViewModels.length > 0) {
+        return requiredViewModels;
+      }
+
+      const downDownViewModels: ViewModel[] = [];
+      for (const downViewModel of downViewModels) {
+        downDownViewModels.push(...downViewModel._items);
+      }
+      downViewModels = downDownViewModels;
+    }
+
+    return undefined;
+  }
 }
 
 /**
