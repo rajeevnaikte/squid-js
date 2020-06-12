@@ -4,10 +4,12 @@ import { ViewModel } from './model/ViewModel';
 import { ViewState } from './model/ViewState';
 import { Component } from './model/Component';
 
-// @ts-ignore
-window.UX = UX;
-// @ts-ignore
-window.UI = UI;
+if (window) {
+  // @ts-ignore
+  window.UX = UX;
+  // @ts-ignore
+  window.UI = UI;
+}
 
 export {
   UI,
