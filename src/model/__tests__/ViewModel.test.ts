@@ -169,13 +169,13 @@ describe('ViewModel', () => {
     // Update listener.
     form.items[1].listeners.click = (vm: ViewModel, event: Event) => {
       eventLogs.push(`${event.type} ${vm.id}`);
-    }
+    };
     document.body.getElementsByTagName('button')[0].click();
 
     // Add new listener.
     form.items[0].listeners.click = (vm: ViewModel, event: Event) => {
       eventLogs.push(`${event.type} ${vm.id}`);
-    }
+    };
     document.body.getElementsByTagName('input')[0].click();
 
     expect(eventLogs).toEqual(['ux-2 click', 'click ux-2', 'click ux-1']);
@@ -207,7 +207,7 @@ describe('ViewModel', () => {
         this.vm.items[0].addItem({
           ux: 'panel.grid.header',
           label: label
-        })
+        });
       }
     });
 
@@ -239,7 +239,7 @@ describe('ViewModel', () => {
       const gridCom = appView.items[0].comp;
 
       return gridCom;
-    }
+    };
 
     test('custom method', () => {
       renderGrid().addHeader('education', 'Education');
@@ -252,7 +252,7 @@ describe('ViewModel', () => {
       renderGrid();
       Array.from(document.getElementsByTagName('span'))
         .find(el => el.getAttribute(Config.UX_NAME_ATTRIB) === 'panel-grid-header')
-        ?.getElementsByTagName('span')[0].click()
+        ?.getElementsByTagName('span')[0].click();
       expect(eventLogs).toEqual(['panel.grid']);
     });
 
@@ -282,5 +282,56 @@ describe('ViewModel', () => {
     expect(textInputs?.length).toEqual(2);
     expect(textInputs?.[0].up('form.form')).toBeDefined();
     expect(textInputs?.[0].up('form_form')).toBeDefined();
+  });
+
+  test('add remove while other elements in sibling', () => {
+    const genesis = new GenesisViewModel(document.body);
+    const form = new ViewModel({
+      ux: 'form.form-panel',
+      title: 'my form',
+      footer: 'thank you'
+    });
+    genesis.add(form);
+
+    // Add an item.
+    form.addItem({
+      ux: 'form.text-input'
+    });
+    expect(prettyHtml(document.body.innerHTML))
+      .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/add-one-item.ux`)));
+
+    // Add an item.
+    form.addItem({
+      ux: 'form.text-input'
+    });
+    expect(prettyHtml(document.body.innerHTML))
+      .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/add-two-item.ux`)));
+
+    // Add an item.
+    form.addItem({
+      ux: 'form.text-input'
+    });
+    expect(prettyHtml(document.body.innerHTML))
+      .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/add-three-item.ux`)));
+
+    const removed = form.removeItem(1) as ViewModel;
+    expect(prettyHtml(document.body.innerHTML))
+      .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/remove-mid-item.ux`)));
+
+    form.addItem(removed, 0);
+    expect(prettyHtml(document.body.innerHTML))
+      .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/re-attach-at-first-position.ux`)));
+
+    form.addItem(removed, 5);
+    expect(prettyHtml(document.body.innerHTML))
+      .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/re-attach-at-non-existing-position.ux`)));
+
+    form.addItem(removed, 2);
+    expect(prettyHtml(document.body.innerHTML))
+      .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/re-attach-at-non-existing-position.ux`)));
+
+    form.addItem(removed, 3);
+    expect(prettyHtml(document.body.innerHTML))
+      .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/re-attach-at-non-existing-position.ux`)));
   });
 });

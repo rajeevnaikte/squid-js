@@ -1,0 +1,31 @@
+module.exports = {
+  name: 'form-form-panel',
+  style() {
+
+  },
+  html() {
+    this.onDataUpdate['title'] = [];
+    this.onDataUpdate['footer'] = [];
+    const el1 = document.createTextNode(this.getData('title'));
+    this.onDataUpdate['title'].push(() => el1.nodeValue = this.getData('title'));
+    const el2 = document.createElement('div');
+    el2.setAttribute('class', this.getData('id'));
+    el2.appendChild(el1);
+    const el4 = document.createElement('items');
+    el4.setAttribute('class', this.getData('id'));
+    const el6 = document.createTextNode(this.getData('footer'));
+    this.onDataUpdate['footer'].push(() => el6.nodeValue = this.getData('footer'));
+    const el7 = document.createElement('div');
+    el7.setAttribute('class', this.getData('id'));
+    el7.appendChild(el6);
+    const el9 = document.createElement('form');
+    el9.setAttribute('class', this.getData('id'));
+    el9.appendChild(el2);
+    el9.appendChild(el4);
+    el9.appendChild(el7);
+    return [el9];
+  },
+  script() {
+
+  }
+};

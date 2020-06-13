@@ -1,13 +1,11 @@
 <div class="ux-0" ux="panel-grid">
-  <div class="items">
-    <div class="ux-1" ux="panel-grid-header-row">
+  <div class="ux-1" ux="panel-grid-header-row">
       <style class="ux-1">
         div.items.ux-1>* {
           margin: 2px;
           border: 1px solid red;
         }
-      </style>
-      <div class="items"><span class="ux-2" ux="panel-grid-header">
+      </style><span class="ux-2" ux="panel-grid-header">
             <style class="ux-2">
               span.ux-2 {
                 padding: 10px;
@@ -26,6 +24,4 @@
               }
             </style><span class="ux-4">Education</span>
           </span></div>
-    </div>
-  </div>
 </div>

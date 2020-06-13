@@ -1,6 +1,4 @@
 <form class="ux-0" ux="form-form">
-  <div class="items">
-    <div class="ux-2" ux="form-text-input">:<input type="text" name="" value="" class="ux-2"></div>
-  </div>
+  <div class="ux-2" ux="form-text-input">:<input type="text" name="" value="" class="ux-2"></div>
 </form>
 <div class="ux-1" ux="form-text-input">:<input type="text" name="" value="" class="ux-1"></div>

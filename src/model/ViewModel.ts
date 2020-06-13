@@ -21,6 +21,7 @@ export class ViewModel {
   private readonly _items: ViewModel[] = [];
   private readonly _domEl: HTMLElement;
   private _itemsEl?: Element | null;
+  private _itemsStartOffset: number = 0;
   private _attachedTo?: ViewModel;
   private _comp?: Component;
 
@@ -87,11 +88,13 @@ export class ViewModel {
       const compDef = getComponentDef(viewState.ux) as ComponentImplType;
       if (!compDef) throw new ComponentUndefined(viewState.ux);
       this._comp = new compDef(this);
-      this._itemsEl = document.createElement('div');
-      this._itemsEl.setAttribute('class', 'items');
-      el.appendChild(this._itemsEl);
-      this._comp?.buildViewState(viewState)?.forEach(this.addItem.bind(this));
       this._state = this.buildState(viewState, compType);
+      Object.assign(el, {
+        postRender: () => {
+          this._comp?.buildViewState(viewState)?.forEach(this.addItem.bind(this));
+        }
+      });
+      this._itemsEl = el;
       return el;
     }
     else {
@@ -106,9 +109,12 @@ export class ViewModel {
         postRender: () => {
           const itemsEl = this._domEl.getElementsByTagName('items')[0];
           if (itemsEl) {
-            this._itemsEl = document.createElement('div');
-            this._itemsEl.setAttribute('class', 'items');
-            itemsEl?.parentElement?.replaceChild(this._itemsEl, itemsEl);
+            this._itemsEl = itemsEl.parentElement;
+            this._itemsStartOffset = Array.from(itemsEl.parentElement?.children ?? []).indexOf(itemsEl);
+            if (this._itemsStartOffset < 0) {
+              this._itemsStartOffset = 0;
+            }
+            itemsEl.remove();
           }
           viewState.items?.forEach(this.addItem.bind(this));
           (this._domEl as CustomElement).postRender = noOpNoReturn;
@@ -177,7 +183,9 @@ export class ViewModel {
     if (this._attachedTo) {
       this.detach();
     }
-    position = (position === undefined || position === null) ? attachTo._items.length : position;
+    position = (position === undefined || position === null || position > attachTo._items.length) ? attachTo._items.length : position;
+    position += attachTo._itemsStartOffset;
+
     attachTo._itemsEl.insertBefore(this._domEl, attachTo._itemsEl.childNodes.item(position));
     (this._domEl as CustomElement).postRender?.();
     this._attachedTo = attachTo;
