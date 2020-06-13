@@ -132,7 +132,9 @@ export class ViewModel {
       uxjsCode.script.bind(el)();
     }
 
-    // el.setAttribute('class', `${el.getAttribute('class') ?? ''} ${viewState.cssClass}`);
+    if (viewState.cssClass) {
+      el.setAttribute('class', `${el.getAttribute('class') ?? ''} ${viewState.cssClass}`);
+    }
     return el;
   }
 

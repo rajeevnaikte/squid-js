@@ -334,4 +334,14 @@ describe('ViewModel', () => {
     expect(prettyHtml(document.body.innerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/re-attach-at-non-existing-position.ux`)));
   });
+
+  test('add cssClass', () => {
+    const genesis = new GenesisViewModel(document.body);
+    genesis.add({
+      ux: 'form-form',
+      cssClass: 'test'
+    });
+    expect(prettyHtml(document.body.innerHTML))
+      .toEqual(prettyHtml(readFile(`${__dirname}/expected/add-css-class.ux`)));
+  });
 });

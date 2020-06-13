@@ -10,6 +10,10 @@ export type ViewStateBase = {
    */
   ux: string;
   /**
+   * CSS class to be applied to this view root element.
+   */
+  cssClass?: string;
+  /**
    * Items to be displayed under this UX. E.g. multiple form-text-input under form.
    */
   items?: ViewState[];
