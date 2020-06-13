@@ -270,7 +270,7 @@ describe('ViewModel', () => {
         {
           ux: 'panel-my-panel',
           items: [{
-            ux: 'form-text-input'
+            ux: 'form.text-input'
           }, {
             ux: 'form-text-input'
           }]
@@ -281,5 +281,6 @@ describe('ViewModel', () => {
     const textInputs = genesis.items[0].down('form-text-input');
     expect(textInputs?.length).toEqual(2);
     expect(textInputs?.[0].up('form.form')).toBeDefined();
+    expect(textInputs?.[0].up('form_form')).toBeDefined();
   });
 });

@@ -291,7 +291,7 @@ export class ViewModel {
     uxType = kebabCase(uxType);
 
     let upViewModel = this._attachedTo;
-    while (upViewModel && upViewModel._ux !== uxType) {
+    while (upViewModel && kebabCase(upViewModel._ux) !== uxType) {
       upViewModel = upViewModel._attachedTo;
     }
 
@@ -309,7 +309,7 @@ export class ViewModel {
     while (downViewModels.length > 0) {
       const requiredViewModels: ViewModel[] = [];
       for (const downViewModel of downViewModels) {
-        if (downViewModel.ux === uxType) {
+        if (kebabCase(downViewModel._ux) === uxType) {
           requiredViewModels.push(downViewModel);
         }
       }
