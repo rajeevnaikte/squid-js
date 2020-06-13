@@ -21,7 +21,7 @@ export class ViewModel {
   private readonly _items: ViewModel[] = [];
   private readonly _domEl: HTMLElement;
   private _itemsEl?: Element | null;
-  private _itemsStartOffset: number = 0;
+  private _itemsStartOffset = 0;
   private _attachedTo?: ViewModel;
   private _comp?: Component;
 
