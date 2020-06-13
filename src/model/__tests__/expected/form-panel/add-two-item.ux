@@ -1,5 +1,6 @@
 <form class="ux-0" ux="form-form-panel">
   <div class="ux-0">my form</div>
+  <!--items-->
   <div class="ux-1" ux="form-text-input">:<input type="text" name="" value="" class="ux-1"></div>
   <div class="ux-2" ux="form-text-input">:<input type="text" name="" value="" class="ux-2"></div>
   <div class="ux-0">thank you</div>

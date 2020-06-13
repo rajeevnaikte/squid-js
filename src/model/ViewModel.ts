@@ -20,8 +20,7 @@ export class ViewModel {
   private readonly _listeners: VoidFunctionsMap;
   private readonly _items: ViewModel[] = [];
   private readonly _domEl: HTMLElement;
-  private _itemsEl?: Element | null;
-  private _itemsStartOffset = 0;
+  private _itemsStartEl?: Comment | null;
   private _attachedTo?: ViewModel;
   private _comp?: Component;
 
@@ -81,8 +80,10 @@ export class ViewModel {
    * @param viewState
    */
   private buildDomEl (viewState: ViewState, compType: ComponentType): HTMLElement {
+    let el: HTMLElement;
+
     if (compType === ComponentType.COMPOSITE) {
-      const el = document.createElement('div');
+      el = document.createElement('div');
       el.setAttribute('class', this._id);
       el.setAttribute(Config.UX_NAME_ATTRIB, viewState.ux);
       const compDef = getComponentDef(viewState.ux) as ComponentImplType;
@@ -94,8 +95,8 @@ export class ViewModel {
           this._comp?.buildViewState(viewState)?.forEach(this.addItem.bind(this));
         }
       });
-      this._itemsEl = el;
-      return el;
+      this._itemsStartEl = document.createComment('items');
+      el.append(this._itemsStartEl);
     }
     else {
       this._state = this.buildState(viewState, compType);
@@ -109,11 +110,8 @@ export class ViewModel {
         postRender: () => {
           const itemsEl = this._domEl.getElementsByTagName('items')[0];
           if (itemsEl) {
-            this._itemsEl = itemsEl.parentElement;
-            this._itemsStartOffset = Array.from(itemsEl.parentElement?.children ?? []).indexOf(itemsEl);
-            if (this._itemsStartOffset < 0) {
-              this._itemsStartOffset = 0;
-            }
+            this._itemsStartEl = document.createComment('items');
+            itemsEl.parentElement?.insertBefore(this._itemsStartEl, itemsEl);
             itemsEl.remove();
           }
           viewState.items?.forEach(this.addItem.bind(this));
@@ -121,20 +119,21 @@ export class ViewModel {
         }
       };
 
-      const el = uxjsCode.html.bind(elBindings)()[0] as CustomElement;
+      el = uxjsCode.html.bind(elBindings)()[0] as CustomElement;
       el.setAttribute(Config.UX_NAME_ATTRIB, viewState.ux);
       Object.assign(el, elBindings);
 
       const styles = uxjsCode.style.bind(el)();
       if (styles) styles.forEach(style => {
-        style.textContent = style.textContent?.replace(/(?:^|\s)items(?=\s|\.)/g, ' div.items') ?? null;
+        // style.textContent = style.textContent?.replace(/(?:^|\s)items(?=\s|\.)/g, ' div.items') ?? null;
         el.insertBefore(style, el.childNodes[0]);
       });
 
       uxjsCode.script.bind(el)();
-
-      return el;
     }
+
+    // el.setAttribute('class', `${el.getAttribute('class') ?? ''} ${viewState.cssClass}`);
+    return el;
   }
 
   /**
@@ -176,7 +175,7 @@ export class ViewModel {
    * @param position - Optionally provide item location in the items list/array of attaching to ViewModel.
    */
   attachTo (attachTo: ViewModel, position?: number): void {
-    if (!attachTo._itemsEl) {
+    if (!attachTo._itemsStartEl) {
       throw new ItemsNotAllowed(attachTo._domEl.getAttribute(Config.UX_NAME_ATTRIB) ?? '');
     }
 
@@ -184,9 +183,11 @@ export class ViewModel {
       this.detach();
     }
     position = (position === undefined || position === null || position > attachTo._items.length) ? attachTo._items.length : position;
-    position += attachTo._itemsStartOffset;
 
-    attachTo._itemsEl.insertBefore(this._domEl, attachTo._itemsEl.childNodes.item(position));
+    const itemsStartOffset = Array.from(attachTo._itemsStartEl.parentElement?.childNodes ?? []).indexOf(attachTo._itemsStartEl) + 1;
+
+    attachTo._itemsStartEl.parentElement?.insertBefore(this._domEl,
+      attachTo._itemsStartEl.parentElement.childNodes.item(position + itemsStartOffset));
     (this._domEl as CustomElement).postRender?.();
     this._attachedTo = attachTo;
     attachTo._items.splice(position, 0, this);

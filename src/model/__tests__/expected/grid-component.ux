@@ -1,11 +1,12 @@
 <div class="ux-0" ux="panel-grid">
+  <!--items-->
   <div class="ux-1" ux="panel-grid-header-row">
       <style class="ux-1">
-        div.items.ux-1>* {
+        items.ux-1>* {
           margin: 2px;
           border: 1px solid red;
         }
-      </style><span class="ux-2" ux="panel-grid-header">
+      </style><!--items--><span class="ux-2" ux="panel-grid-header">
             <style class="ux-2">
               span.ux-2 {
                 padding: 10px;
