@@ -2,6 +2,7 @@ import { readFile } from 'ts-loader/dist/utils';
 import { html as prettyHtml } from 'js-beautify';
 import { UI } from '../../index';
 import { ElementMissing, ItemsNotAllowed } from '../../exceptions/errors';
+import { Config } from '../../configurations/configuration';
 
 describe('UI', () => {
   test('add app component', async () => {
@@ -25,7 +26,7 @@ describe('UI', () => {
           ux: 'form-field-valid'
         }]
       });
-    })).rejects.toThrow(new ItemsNotAllowed('form-field-valid'));
+    })).rejects.toThrow(new ItemsNotAllowed('form-field-valid', Config.MAIN_ITEMS_REF));
   });
 
   test('add component items', async () => {

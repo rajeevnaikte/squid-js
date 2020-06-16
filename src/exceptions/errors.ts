@@ -19,8 +19,14 @@ export class UXNameNotValid extends BaseError {
 }
 
 export class ItemsNotAllowed extends BaseError {
-  constructor (uxName: string) {
-    super('ITEMS_NOT_ALLOWED', `Adding items not allowed for the UX ${uxName}.`);
+  constructor (uxName: string, itemsFor: string) {
+    super('ITEMS_NOT_ALLOWED', `Adding ${itemsFor} items not allowed for the UX ${uxName}.`);
+  }
+}
+
+export class MultipleItemsRefs extends BaseError {
+  constructor (uxName: string, ref: string) {
+    super('MULTIPLE_ITEMS_TAGS', `Multiple items tag for ref ${ref} found in UX ${uxName}.`);
   }
 }
 

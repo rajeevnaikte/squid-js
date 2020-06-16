@@ -106,7 +106,7 @@ describe('ViewModel', () => {
     expect(removed?.attachedTo).toEqual(undefined);
 
     // Add the removed item back at same position.
-    if (removed) form.addItem(removed, 0);
+    if (removed) form.addItem(removed, { position: 0 });
     expect(prettyHtml(document.body.innerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/add-two-item.ux`)));
     expect(removed?.attachedTo).toEqual(form);
@@ -141,7 +141,7 @@ describe('ViewModel', () => {
 
     // Re-attach to original position.
     // @ts-ignore
-    detachedViewModel.attachTo(genesis.items[0], 0);
+    detachedViewModel.attachTo(genesis.items[0], { position: 0 });
     expect(prettyHtml(document.body.innerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/add-two-item.ux`)));
   });
@@ -318,19 +318,19 @@ describe('ViewModel', () => {
     expect(prettyHtml(document.body.innerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/remove-mid-item.ux`)));
 
-    form.addItem(removed, 0);
+    form.addItem(removed, { position: 0 });
     expect(prettyHtml(document.body.innerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/re-attach-at-first-position.ux`)));
 
-    form.addItem(removed, 5);
+    form.addItem(removed, { position: 5 });
     expect(prettyHtml(document.body.innerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/re-attach-at-non-existing-position.ux`)));
 
-    form.addItem(removed, 2);
+    form.addItem(removed, { position: 2 });
     expect(prettyHtml(document.body.innerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/re-attach-at-non-existing-position.ux`)));
 
-    form.addItem(removed, 3);
+    form.addItem(removed, { position: 3 });
     expect(prettyHtml(document.body.innerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/re-attach-at-non-existing-position.ux`)));
   });

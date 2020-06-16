@@ -1,4 +1,8 @@
 {
   "ENV": "dev",
-  "UX_NAME_ATTRIB": "ux"
+  "UX_NAME_ATTRIB": "ux",
+  "MAIN_ITEMS_REF": "main",
+  "ITEMS_TAG": "items",
+  "ITEM_TAG": "item",
+  "ITEMS_FOR_ATTRIB": "items-for"
 }

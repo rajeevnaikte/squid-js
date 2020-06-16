@@ -15,8 +15,28 @@ export type ViewStateBase = {
   cssClass?: string;
   /**
    * Items to be displayed under this UX. E.g. multiple form-text-input under form.
+   *
+   * e.g. items: [{
+   *   ux: 'form-text-input'
+   * }, {
+   *   ux: 'form-text-input'
+   * }]
+   *
+   * e.g. items: {
+   *   headers: [{
+   *     ux: 'table-header'
+   *   }, {
+   *     ux: 'table-header'
+   *   }],
+   *   rows: [{
+   *     ux: 'table-row',
+   *     items: [{
+   *       ux: 'table-cell'
+   *     }]
+   *   }]
+   * }
    */
-  items?: ViewState[];
+  items?: ViewState[] | { [itemsFor: string]: ViewState[] };
   /**
    * HTML DOM listeners can be added here.
    */

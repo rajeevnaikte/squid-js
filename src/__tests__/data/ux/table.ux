@@ -1,0 +1,15 @@
+name: table;
+
+<table>
+  <thead>
+    <th for-items="columns">
+      <p>
+        <item />
+      </p>
+    </th>
+  </thead>
+  <tbody>
+    <tr for-items="rows">
+    </tr>
+  </tbody>
+</table>

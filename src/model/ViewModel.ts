@@ -3,7 +3,7 @@ import { baseViewConfigKeys, ViewState } from './ViewState';
 import { CustomElement, UXJSCode, VoidFunction, VoidFunctionsMap } from './types';
 import { getUniqueElId } from '../common/utils';
 import { get as queryJsonPath, kebabCase } from 'lodash';
-import { ComponentUndefined, ItemsNotAllowed } from '../exceptions/errors';
+import { ComponentUndefined, ItemsNotAllowed, MultipleItemsRefs } from '../exceptions/errors';
 import { getComponentDef, getComponentType, verifyDefined } from '../data/storage';
 import { ComponentType } from './ComponentType';
 import { Component, ComponentImplType } from './Component';
@@ -18,10 +18,19 @@ export class ViewModel {
   private _state?: JsonObjectType;
   private readonly _bubbleEvents: boolean;
   private readonly _listeners: VoidFunctionsMap;
-  private readonly _items: ViewModel[] = [];
+  private readonly _items: {
+    [itemsRef: string]: {
+      items: ViewModel[],
+      itemsStartEl: Comment,
+      itemsTemplateEl?: HTMLElement
+    }
+  } = {};
   private readonly _domEl: HTMLElement;
-  private _itemsStartEl?: Comment | null;
-  private _attachedTo?: ViewModel;
+  private _attachedTo?: {
+    vm: ViewModel,
+    itemFor: string,
+    itemEl: HTMLElement
+  };
   private _comp?: Component;
 
   constructor (viewState: ViewState) {
@@ -40,6 +49,7 @@ export class ViewModel {
   /**
    * Build state object with setter to fire onStateUpdate event.
    * @param viewState
+   * @param compType
    */
   private buildState (viewState: ViewState, compType: ComponentType): JsonObjectType {
     const state = this.extractState(viewState);
@@ -78,6 +88,7 @@ export class ViewModel {
   /**
    * Build the custom element of the ux.
    * @param viewState
+   * @param compType
    */
   private buildDomEl (viewState: ViewState, compType: ComponentType): HTMLElement {
     let el: HTMLElement;
@@ -86,17 +97,20 @@ export class ViewModel {
       el = document.createElement('div');
       el.setAttribute('class', this._id);
       el.setAttribute(Config.UX_NAME_ATTRIB, viewState.ux);
+      const itemsEl = document.createElement('items');
+      el.append(itemsEl);
+
       const compDef = getComponentDef(viewState.ux) as ComponentImplType;
       if (!compDef) throw new ComponentUndefined(viewState.ux);
       this._comp = new compDef(this);
       this._state = this.buildState(viewState, compType);
       Object.assign(el, {
         postRender: () => {
-          this._comp?.buildViewState(viewState)?.forEach(this.addItem.bind(this));
+          this.addItemsOf(this._comp?.buildViewState(viewState));
         }
       });
-      this._itemsStartEl = document.createComment('items');
-      el.append(this._itemsStartEl);
+
+      this.addItemsComment(itemsEl, Config.MAIN_ITEMS_REF);
     }
     else {
       this._state = this.buildState(viewState, compType);
@@ -108,13 +122,7 @@ export class ViewModel {
           return queryJsonPath(this._state, stateKey)?.toString() ?? '';
         },
         postRender: () => {
-          const itemsEl = this._domEl.getElementsByTagName('items')[0];
-          if (itemsEl) {
-            this._itemsStartEl = document.createComment('items');
-            itemsEl.parentElement?.insertBefore(this._itemsStartEl, itemsEl);
-            itemsEl.remove();
-          }
-          viewState.items?.forEach(this.addItem.bind(this));
+          this.addItemsOf(viewState.items);
           (this._domEl as CustomElement).postRender = noOpNoReturn;
         }
       };
@@ -130,12 +138,57 @@ export class ViewModel {
       });
 
       uxjsCode.script.bind(el)();
+
+      this.setUpItemsRefs(el, viewState);
     }
 
     if (viewState.cssClass) {
       el.setAttribute('class', `${el.getAttribute('class') ?? ''} ${viewState.cssClass}`);
     }
     return el;
+  }
+
+  private addItemsComment (itemsEl: Element, itemsFor: string): void {
+    const itemsStartEl = document.createComment('items');
+    itemsEl.replaceWith(itemsStartEl);
+    this._items[itemsFor] = {
+      items: [],
+      itemsStartEl
+    };
+  }
+
+  /**
+   * Setup comment tags for items refs.
+   * @param el
+   * @param viewState
+   */
+  private setUpItemsRefs (el: HTMLElement, viewState: ViewState) {
+    const mainItemsTags = el.querySelectorAll(`${Config.ITEMS_TAG}:not([${Config.ITEMS_FOR_ATTRIB}])`);
+    if (mainItemsTags.length > 1) {
+      throw new MultipleItemsRefs(viewState.ux, Config.MAIN_ITEMS_REF);
+    }
+    if (mainItemsTags.length > 0) {
+      this.addItemsComment(mainItemsTags[0], Config.MAIN_ITEMS_REF);
+    }
+
+    el.querySelectorAll(`${Config.ITEMS_TAG}[${Config.ITEMS_FOR_ATTRIB}]`)
+      .forEach(itemsEl => {
+        const itemsFor = itemsEl.getAttribute(Config.ITEMS_FOR_ATTRIB) as string;
+        if (this._items[itemsFor]) {
+          throw new MultipleItemsRefs(viewState.ux, itemsFor);
+        }
+        this.addItemsComment(itemsEl, itemsFor);
+      });
+
+    el.querySelectorAll(`[${Config.ITEMS_FOR_ATTRIB}]`)
+      .forEach(templateEl => {
+        const itemsFor = templateEl.getAttribute(Config.ITEMS_FOR_ATTRIB) as string;
+        if (this._items[itemsFor]) {
+          throw new MultipleItemsRefs(viewState.ux, itemsFor);
+        }
+        this.addItemsComment(templateEl, itemsFor);
+        this._items[itemsFor].itemsTemplateEl = templateEl as HTMLElement;
+      });
   }
 
   /**
@@ -174,54 +227,93 @@ export class ViewModel {
    * Attach this ViewModel to another. A ViewModel can be attached to only one.
    * So it will remove previous ViewModel and attach to new ViewModel.
    * @param attachTo
-   * @param position - Optionally provide item location in the items list/array of attaching to ViewModel.
+   * @param opts itemsFor - Optionally provide items key in the items object of attaching to ViewModel.
+   * @param opts position - Optionally provide item location in the items list/array of attaching to ViewModel.
    */
-  attachTo (attachTo: ViewModel, position?: number): void {
-    if (!attachTo._itemsStartEl) {
-      throw new ItemsNotAllowed(attachTo._domEl.getAttribute(Config.UX_NAME_ATTRIB) ?? '');
+  attachTo (attachTo: ViewModel, opts?: { itemFor?: string; position?: number }): void {
+    const itemsFor = opts?.itemFor ?? Config.MAIN_ITEMS_REF;
+
+    if (!attachTo._items[itemsFor]) {
+      throw new ItemsNotAllowed(attachTo._domEl.getAttribute(Config.UX_NAME_ATTRIB) ?? '', itemsFor);
     }
 
     if (this._attachedTo) {
       this.detach();
     }
-    position = (position === undefined || position === null || position > attachTo._items.length) ? attachTo._items.length : position;
 
-    const itemsStartOffset = Array.from(attachTo._itemsStartEl.parentElement?.childNodes ?? []).indexOf(attachTo._itemsStartEl) + 1;
+    const itemsForData = attachTo._items[itemsFor];
+    const itemsLength = itemsForData.items.length;
+    const position = (opts?.position !== undefined && opts.position < itemsLength) ? opts.position : itemsLength;
 
-    attachTo._itemsStartEl.parentElement?.insertBefore(this._domEl,
-      attachTo._itemsStartEl.parentElement.childNodes.item(position + itemsStartOffset));
+    const itemsStartOffset = Array.from(itemsForData.itemsStartEl.parentElement?.childNodes ?? [])
+      .indexOf(itemsForData.itemsStartEl) + 1;
+
+    let elementToInsert = this._domEl;
+    if (itemsForData.itemsTemplateEl) {
+      elementToInsert = itemsForData.itemsTemplateEl.cloneNode(true) as HTMLElement;
+      const itemEl = elementToInsert.getElementsByTagName(Config.ITEM_TAG)[0];
+      if (itemEl) {
+        itemEl.replaceWith(this._domEl);
+      }
+      else {
+        elementToInsert.append(this._domEl);
+      }
+    }
+
+    itemsForData.itemsStartEl.parentElement?.insertBefore(elementToInsert,
+      itemsForData.itemsStartEl.parentElement.childNodes.item(position + itemsStartOffset));
     (this._domEl as CustomElement).postRender?.();
-    this._attachedTo = attachTo;
-    attachTo._items.splice(position, 0, this);
+
+    this._attachedTo = {
+      vm: attachTo,
+      itemFor: itemsFor,
+      itemEl: elementToInsert
+    };
+    itemsForData.items.splice(position, 0, this);
   }
 
   /**
    * Detach the ViewModel from the app.
    */
   detach (): ViewModel {
-    this._domEl.remove();
     if (this._attachedTo) {
-      const itemIdx = this._attachedTo._items.indexOf(this);
+      this._attachedTo.itemEl.remove();
+      const itemsForData = this._attachedTo.vm._items[this._attachedTo.itemFor];
+      const itemIdx = itemsForData.items.indexOf(this);
       if (itemIdx > -1) {
-        this._attachedTo._items.splice(itemIdx, 1);
+        itemsForData.items.splice(itemIdx, 1);
       }
       this._attachedTo = undefined;
     }
     return this;
   }
 
+  private addItemsOf (items?: ViewState[] | { [itemsFor: string]: ViewState[] }) {
+    if (items) {
+      if (Array.isArray(items)) {
+        items.forEach(item => this.addItem(item));
+      }
+      else {
+        for (const itemsFor in items) {
+          items[itemsFor].forEach(item => this.addItem(item, { itemFor: itemsFor }));
+        }
+      }
+    }
+  }
+
   /**
    * Add item into the view-model which will render into view.
    * @param view
-   * @param position - Optionally provide item location in the items list/array.
+   * @param opts .itemFor
+   * @param opts .position - Optionally provide item location in the items list/array.
    * @return added ViewModel
    */
-  addItem (view: ViewState | ViewModel, position?: number): ViewModel {
+  addItem (view: ViewState | ViewModel, opts?: { itemFor?: string; position?: number }): ViewModel {
     if (!(view instanceof ViewModel)) {
       view = new ViewModel(view);
     }
 
-    view.attachTo(this, position);
+    view.attachTo(this, opts);
     return view as ViewModel;
   }
 
@@ -229,9 +321,11 @@ export class ViewModel {
    * Remove item at given index or the matching instance of given ViewModel.
    * @return Removed ViewModel or undefined if nothing removed.
    */
-  removeItem (item: number | ViewModel): ViewModel | undefined {
+  removeItem (item: number | ViewModel, opts?: { itemFor?: string }): ViewModel | undefined {
+    const itemFor = opts?.itemFor ?? Config.MAIN_ITEMS_REF;
+
     if (!(item instanceof ViewModel)) {
-      item = this._items[item];
+      item = this._items[itemFor].items[item];
     }
 
     item?.detach();
@@ -270,14 +364,14 @@ export class ViewModel {
    * Get items attached to this ViewModel.
    */
   get items (): ViewModel[] {
-    return [...this._items];
+    return Object.values(this._items).flatMap(entry => entry.items);
   }
 
   /**
    * Get the ViewModel under whom this is attached.
    */
   get attachedTo (): ViewModel | undefined {
-    return this._attachedTo;
+    return this._attachedTo?.vm;
   }
 
   /**
@@ -301,9 +395,9 @@ export class ViewModel {
   up (uxType: string): ViewModel | undefined {
     uxType = kebabCase(uxType);
 
-    let upViewModel = this._attachedTo;
+    let upViewModel = this._attachedTo?.vm;
     while (upViewModel && kebabCase(upViewModel._ux) !== uxType) {
-      upViewModel = upViewModel._attachedTo;
+      upViewModel = upViewModel._attachedTo?.vm;
     }
 
     return upViewModel;
@@ -316,7 +410,7 @@ export class ViewModel {
   down (uxType: string): ViewModel[] | undefined {
     uxType = kebabCase(uxType);
 
-    let downViewModels = this._items;
+    let downViewModels = Object.values(this._items).flatMap(entry => entry.items);
     while (downViewModels.length > 0) {
       const requiredViewModels: ViewModel[] = [];
       for (const downViewModel of downViewModels) {
@@ -331,7 +425,7 @@ export class ViewModel {
 
       const downDownViewModels: ViewModel[] = [];
       for (const downViewModel of downViewModels) {
-        downDownViewModels.push(...downViewModel._items);
+        downDownViewModels.push(...Object.values(downViewModel._items).flatMap(entry => entry.items));
       }
       downViewModels = downDownViewModels;
     }
