@@ -13,7 +13,8 @@
     "test": "ENV=test jest",
     "build": "tsc",
     "prepublish": "tsc",
-    "serve": "export UI_MODULE_NAME=../src && uxui serve -u ./examples/ux -e ./examples/app-with-component.ts"
+    "serve": "export UI_MODULE_NAME=../src && uxui serve -u ./examples/ux -e ./examples/app-with-component.ts",
+    "go-live": "npm update && git add . && git commit && npm version patch && git push && npm publish"
   },
   "repository": {
     "type": "git",
@@ -42,7 +43,7 @@
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "js-beautify": "^1.11.0",
     "squid-node-utils": "^1.0.2",
-    "squid-uxui": "^1.4.0",
+    "squid-uxui": "^1.4.5",
     "ts-jest": "^25.5.1",
     "ts-loader": "^7.0.5",
     "ts-node": "^8.10.2",

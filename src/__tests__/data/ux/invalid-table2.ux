@@ -1,4 +1,4 @@
-name: table;
+name: invalid-table2;
 
 <table>
   <thead>
@@ -15,7 +15,10 @@ name: table;
       <items />
     </tr>
     <tr>
-      <items items-for="test" />
+      <items />
+    </tr>
+    <tr>
+      <items items-for="columns" />
     </tr>
   </tbody>
 </table>

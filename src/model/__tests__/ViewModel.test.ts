@@ -5,6 +5,7 @@ import { UI, UX } from '../..';
 import { Component } from '../Component';
 import { ViewState } from '../ViewState';
 import { Config } from '../../configurations/configuration';
+import { MultipleItemsRefs } from '../../exceptions/errors';
 
 describe('ViewModel', () => {
   test('GenesisViewModel', async () => {
@@ -343,5 +344,62 @@ describe('ViewModel', () => {
     });
     expect(prettyHtml(document.body.innerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/add-css-class.ux`)));
+  });
+
+  test('items for', () => {
+    const genesis = new GenesisViewModel(document.body);
+    genesis.add({
+      ux: 'table',
+      items: {
+        main: [{
+          ux: 'text-box',
+          text: 'main 1'
+        }, {
+          ux: 'text-box',
+          text: 'main 2'
+        }],
+        columns: [{
+          ux: 'text-box',
+          text: 'column 1'
+        }, {
+          ux: 'text-box',
+          text: 'column 2'
+        }],
+        rows: [{
+          ux: 'text-box',
+          text: 'row 1'
+        }, {
+          ux: 'text-box',
+          text: 'row 2'
+        }],
+        test: [{
+          ux: 'text-box',
+          text: 'test 1'
+        }, {
+          ux: 'text-box',
+          text: 'test 2'
+        }]
+      }
+    });
+    expect(prettyHtml(document.body.innerHTML))
+      .toEqual(prettyHtml(readFile(`${__dirname}/expected/table.ux`)));
+  });
+
+  test('multiple ref to same items key', () => {
+    const genesis = new GenesisViewModel(document.body);
+    expect(() => {
+      genesis.add({
+        ux: 'invalid-table'
+      });
+    }).toThrow(new MultipleItemsRefs('invalid-table', 'columns'));
+  });
+
+  test('multiple main items tag', () => {
+    const genesis = new GenesisViewModel(document.body);
+    expect(() => {
+      genesis.add({
+        ux: 'invalid-table2'
+      });
+    }).toThrow(new MultipleItemsRefs('invalid-table-2', 'main'));
   });
 });

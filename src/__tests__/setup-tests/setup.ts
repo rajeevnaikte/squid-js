@@ -6,7 +6,7 @@ import * as cp from 'child_process';
 
 let elCount = 0;
 
-walkDirTree(`${__dirname}/../data`, { fileNameMatcher: /[.]uxjs$/ })
+walkDirTree(`${__dirname}/../data`, { fileNameMatcher: /[.]uxjs$/, recursive: true })
   .forEach(uxjs => UX.add(require(uxjs)));
 
 const uxuiPath = pathResolve('./.uxui');
@@ -16,7 +16,7 @@ cp.execSync(
   { stdio: 'inherit' }
 );
 
-walkDirTree(uxuiPath, { fileNameMatcher: /[.]uxjs$/ })
+walkDirTree(uxuiPath, { fileNameMatcher: /[.]uxjs$/, recursive: true })
   .forEach(uxjs => UX.add(require(uxjs)));
 
 beforeEach(() => {

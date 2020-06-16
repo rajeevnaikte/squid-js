@@ -1,0 +1,34 @@
+<table class="ux-0" ux="table">
+  <thead class="ux-0">
+  <!--items-->
+  <th items-for="columns" class="ux-0">
+    <p class="ux-0">
+      <p class="ux-3" ux="text-box">column 1</p>
+    </p>
+  </th>
+  <th items-for="columns" class="ux-0">
+    <p class="ux-0">
+      <p class="ux-4" ux="text-box">column 2</p>
+    </p>
+  </th>
+  </thead>
+  <tbody class="ux-0">
+  <!--items-->
+  <tr items-for="rows" class="ux-0">
+    <p class="ux-5" ux="text-box">row 1</p>
+  </tr>
+  <tr items-for="rows" class="ux-0">
+    <p class="ux-6" ux="text-box">row 2</p>
+  </tr>
+  <tr class="ux-0">
+    <!--items-->
+    <p class="ux-1" ux="text-box">main 1</p>
+    <p class="ux-2" ux="text-box">main 2</p>
+  </tr>
+  <tr class="ux-0">
+    <!--items-->
+    <p class="ux-7" ux="text-box">test 1</p>
+    <p class="ux-8" ux="text-box">test 2</p>
+  </tr>
+  </tbody>
+</table>
