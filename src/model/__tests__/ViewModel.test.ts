@@ -187,6 +187,8 @@ describe('ViewModel', () => {
 
     UX.define('panel.grid', class extends Component {
       buildViewState (viewState: ViewState): ViewState[] {
+        eventLogs.push('buildViewState called');
+
         return [{
           ux: 'panel.grid.header-row',
           items: viewState.headers.map((header: any) => {
@@ -196,6 +198,10 @@ describe('ViewModel', () => {
             };
           })
         }];
+      }
+
+      onComponentReady () {
+        eventLogs.push('onComponentReady called');
       }
 
       onStateUpdate (key: string, prevValue: any, newValue: any) {
@@ -242,6 +248,11 @@ describe('ViewModel', () => {
       return gridCom;
     };
 
+    test('event calls', () => {
+      renderGrid();
+      expect(eventLogs).toEqual(['buildViewState called', 'onComponentReady called']);
+    });
+
     test('custom method', () => {
       renderGrid().addHeader('education', 'Education');
 
@@ -251,10 +262,11 @@ describe('ViewModel', () => {
 
     test('listener', () => {
       renderGrid();
+
       Array.from(document.getElementsByTagName('span'))
         .find(el => el.getAttribute(Config.UX_NAME_ATTRIB) === 'panel-grid-header')
         ?.getElementsByTagName('span')[0].click();
-      expect(eventLogs).toEqual(['panel.grid']);
+      expect(eventLogs.filter(log => !log.includes('called'))).toEqual(['panel.grid']);
     });
 
     test('state update', () => {

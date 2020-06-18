@@ -24,6 +24,12 @@ export abstract class Component {
   abstract buildViewState (viewState: ViewState): ViewState[];
 
   /**
+   * Function called after calling buildViewState and adding it to the containing ViewModel.
+   * I.e. after the component is built and ready.
+   */
+  onComponentReady? (): void;
+
+  /**
    * When a state of the view is updated through view-model, then this method is called.
    * Write logic here to update the view-model of inner components.
    * @param viewModel

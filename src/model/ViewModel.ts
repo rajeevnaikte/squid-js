@@ -107,6 +107,7 @@ export class ViewModel {
       Object.assign(el, {
         postRender: () => {
           this.addItemsOf(this._comp?.buildViewState(viewState));
+          this._comp?.onComponentReady?.();
         }
       });
 
