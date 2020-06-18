@@ -20,16 +20,16 @@ export class ViewModel {
   private readonly _listeners: VoidFunctionsMap;
   private readonly _items: {
     [itemsRef: string]: {
-      items: ViewModel[],
-      itemsStartEl: Comment,
-      itemsTemplateEl?: HTMLElement
-    }
+      items: ViewModel[];
+      itemsStartEl: Comment;
+      itemsTemplateEl?: HTMLElement;
+    };
   } = {};
   private readonly _domEl: HTMLElement;
   private _attachedTo?: {
-    vm: ViewModel,
-    itemFor: string,
-    itemEl: HTMLElement
+    vm: ViewModel;
+    itemFor: string;
+    itemEl: HTMLElement;
   };
   private _comp?: Component;
 
