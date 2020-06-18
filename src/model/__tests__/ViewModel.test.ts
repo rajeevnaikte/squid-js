@@ -402,4 +402,47 @@ describe('ViewModel', () => {
       });
     }).toThrow(new MultipleItemsRefs('invalid-table-2', 'main'));
   });
+
+  test('get items', () => {
+    const genesis = new GenesisViewModel(document.body);
+    genesis.add({
+      ux: 'table',
+      items: {
+        main: [{
+          ux: 'text-box',
+          text: 'main 1'
+        }, {
+          ux: 'text-box',
+          text: 'main 2'
+        }],
+        columns: [{
+          ux: 'text-box',
+          text: 'column 1'
+        }, {
+          ux: 'text-box',
+          text: 'column 2'
+        }],
+        rows: [{
+          ux: 'text-box',
+          text: 'row 1'
+        }, {
+          ux: 'text-box',
+          text: 'row 2'
+        }],
+        test: [{
+          ux: 'text-box',
+          text: 'test 1'
+        }, {
+          ux: 'text-box',
+          text: 'test 2'
+        }]
+      }
+    });
+
+    const table = genesis.items[0];
+    expect(table.items.map(item => item.ux))
+      .toEqual(new Array(8).fill('text-box'));
+    expect(table.getItems('columns').map(item => item.state.text))
+      .toEqual(['column 1', 'column 2']);
+  });
 });

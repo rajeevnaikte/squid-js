@@ -368,6 +368,14 @@ export class ViewModel {
   }
 
   /**
+   * Get items for specific items key.
+   * @param itemsFor - If empty will return the 'main' items.
+   */
+  getItems (itemsFor?: string) {
+    return this._items[itemsFor ?? Config.MAIN_ITEMS_REF].items;
+  }
+
+  /**
    * Get the ViewModel under whom this is attached.
    */
   get attachedTo (): ViewModel | undefined {
