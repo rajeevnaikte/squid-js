@@ -457,4 +457,19 @@ describe('ViewModel', () => {
     expect(table.getItems('columns').map(item => item.state.text))
       .toEqual(['column 1', 'column 2']);
   });
+
+  test('with script', () => {
+    const genesis = new GenesisViewModel(document.body);
+    genesis.add({
+      ux: 'form-form',
+      items: [{
+        ux: 'with-script'
+      }]
+    })
+
+    document.body.getElementsByTagName('form')[0].click();
+
+    expect(prettyHtml(document.body.innerHTML))
+      .toEqual(prettyHtml(readFile(`${__dirname}/expected/with-script.ux`)));
+  });
 });

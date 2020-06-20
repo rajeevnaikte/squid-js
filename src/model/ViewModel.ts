@@ -125,6 +125,8 @@ export class ViewModel {
         postRender: () => {
           this.addItemsOf(viewState.items);
           (this._domEl as CustomElement).postRender = noOpNoReturn;
+
+          uxjsCode.script.bind(el)();
         }
       };
 
@@ -137,8 +139,6 @@ export class ViewModel {
         // style.textContent = style.textContent?.replace(/(?:^|\s)items(?=\s|\.)/g, ' div.items') ?? null;
         el.insertBefore(style, el.childNodes[0]);
       });
-
-      uxjsCode.script.bind(el)();
 
       this.setUpItemsRefs(el, viewState);
     }

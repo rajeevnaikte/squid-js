@@ -1,0 +1,11 @@
+name: with-script;
+
+<div>
+  <span class="with-script">test</span>
+</div>
+
+<script>
+  this.parentElement.addEventListener('click', () => {
+    this.parentElement.getElementsByClassName('with-script')[0].textContent = 'changed';
+  });
+</script>
