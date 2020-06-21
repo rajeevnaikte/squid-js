@@ -1,5 +1,21 @@
+<html>
+<head>
+  <style class="ux-1">
+    .form-input.ux-1 {
+      color: red;
+    }
+  </style>
+  <style class="ux-2">
+    .form-input.ux-2 {
+      color: red;
+    }
+  </style>
+</head>
+<body>
 <form class="ux-0" ux="form-form">
   <!--items-->
   <div class="ux-1" ux="form-text-input">:<input type="text" name="" value="" class="ux-1"></div>
   <div class="ux-2" ux="form-text-input">:<input type="text" name="" value="" class="ux-2"></div>
 </form>
+</body>
+</html>

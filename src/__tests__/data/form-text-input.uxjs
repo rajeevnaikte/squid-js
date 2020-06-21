@@ -1,7 +1,11 @@
 module.exports = {
   name: 'form-text-input',
   style() {
-
+    const el0 = document.createTextNode('.form-input.' + this.getData('id') + '{     color: red;   }');
+    const el1 = document.createElement('style');
+    el1.setAttribute('class', this.getData('id'));
+    el1.appendChild(el0);
+    return [el1];
   },
   html() {
     this.onDataUpdate = {};

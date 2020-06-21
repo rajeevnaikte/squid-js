@@ -1,4 +1,5 @@
-<div class="form-group ux-0" ux="form-field-valid">
+<html>
+<head>
   <style class="ux-0">
     .form-group.ux-0 {
       color: red;
@@ -15,5 +16,14 @@
     .some-class.some-class2.ux-0, .some-class.some-class3.ux-0, .some-class.some-class4.ux-0 {
       border: 1px solid red;
     }
-  </style><label for="" class="ux-0"></label>test<input type="email" class="form-control ux-0" id="" aria-describedby="emailHelp" placeholder="">test2<br class="ux-0"><small id="emailHelp" class="form-text text-muted ux-0"></small>
-</div>
+  </style>
+</head>
+<body>
+<div class="form-group ux-0" ux="form-field-valid"><label for="" class="ux-0"></label>test<input type="email"
+                                                                                                 class="form-control ux-0"
+                                                                                                 id=""
+                                                                                                 aria-describedby="emailHelp"
+                                                                                                 placeholder="">test2<br
+    class="ux-0"><small id="emailHelp" class="form-text text-muted ux-0"></small></div>
+</body>
+</html>

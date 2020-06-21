@@ -14,7 +14,7 @@ describe('ViewModel', () => {
       ux: 'form-field-valid'
     });
 
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/valid.ux`) ?? ''));
 
     // @ts-ignore
@@ -34,7 +34,7 @@ describe('ViewModel', () => {
       exampleInputEmail2: 1234
     });
 
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/with-state.ux`) ?? ''));
 
     // @ts-ignore
@@ -75,7 +75,7 @@ describe('ViewModel', () => {
       }]
     });
 
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/add-two-item.ux`)));
   });
 
@@ -90,31 +90,31 @@ describe('ViewModel', () => {
     form.addItem({
       ux: 'form.text-input'
     });
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/add-one-item.ux`)));
 
     // Add another item.
     form.addItem({
       ux: 'form.text-input'
     });
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/add-two-item.ux`)));
 
     // Remove an item.
     const removed = form.removeItem(0);
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/after-detach.ux`)));
     expect(removed?.attachedTo).toEqual(undefined);
 
     // Add the removed item back at same position.
     if (removed) form.addItem(removed, { position: 0 });
-    expect(prettyHtml(document.body.innerHTML))
-      .toEqual(prettyHtml(readFile(`${__dirname}/expected/add-two-item.ux`)));
+    expect(prettyHtml(document.documentElement.outerHTML))
+      .toEqual(prettyHtml(readFile(`${__dirname}/expected/re-add-at-same-position.ux`)));
     expect(removed?.attachedTo).toEqual(form);
 
     // Move an item to different place.
     if (removed) genesis.add(removed);
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/re-attached.ux`)));
     expect(removed?.attachedTo).toEqual(undefined);
   });
@@ -132,19 +132,19 @@ describe('ViewModel', () => {
 
     // @ts-ignore
     const detachedViewModel = genesis.items[0].items[0].detach();
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/after-detach.ux`)));
 
     // Re-attach in different place.
     genesis.add(detachedViewModel);
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/re-attached.ux`)));
 
     // Re-attach to original position.
     // @ts-ignore
     detachedViewModel.attachTo(genesis.items[0], { position: 0 });
-    expect(prettyHtml(document.body.innerHTML))
-      .toEqual(prettyHtml(readFile(`${__dirname}/expected/add-two-item.ux`)));
+    expect(prettyHtml(document.documentElement.outerHTML))
+      .toEqual(prettyHtml(readFile(`${__dirname}/expected/re-add-at-same-position.ux`)));
   });
 
   test('listeners', () => {
@@ -256,7 +256,7 @@ describe('ViewModel', () => {
     test('custom method', () => {
       renderGrid().addHeader('education', 'Education');
 
-      expect(prettyHtml(document.body.innerHTML))
+      expect(prettyHtml(document.documentElement.outerHTML))
         .toEqual(prettyHtml(readFile(`${__dirname}/expected/grid-component.ux`)));
     });
 
@@ -310,41 +310,41 @@ describe('ViewModel', () => {
     form.addItem({
       ux: 'form.text-input'
     });
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/add-one-item.ux`)));
 
     // Add an item.
     form.addItem({
       ux: 'form.text-input'
     });
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/add-two-item.ux`)));
 
     // Add an item.
     form.addItem({
       ux: 'form.text-input'
     });
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/add-three-item.ux`)));
 
     const removed = form.removeItem(1) as ViewModel;
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/remove-mid-item.ux`)));
 
     form.addItem(removed, { position: 0 });
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/re-attach-at-first-position.ux`)));
 
     form.addItem(removed, { position: 5 });
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/re-attach-at-non-existing-position.ux`)));
 
     form.addItem(removed, { position: 2 });
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/re-attach-at-non-existing-position.ux`)));
 
     form.addItem(removed, { position: 3 });
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/re-attach-at-non-existing-position.ux`)));
   });
 
@@ -354,7 +354,7 @@ describe('ViewModel', () => {
       ux: 'form-form',
       cssClass: 'test'
     });
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/add-css-class.ux`)));
   });
 
@@ -393,7 +393,7 @@ describe('ViewModel', () => {
         }]
       }
     });
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/table.ux`)));
   });
 
@@ -469,7 +469,7 @@ describe('ViewModel', () => {
 
     document.body.getElementsByTagName('form')[0].click();
 
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/with-script.ux`)));
   });
 });

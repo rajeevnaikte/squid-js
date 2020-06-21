@@ -26,6 +26,7 @@ export class ViewModel {
     };
   } = {};
   private readonly _domEl: HTMLElement;
+  private _style?: HTMLElement;
   private _attachedTo?: {
     vm: ViewModel;
     itemFor: string;
@@ -135,10 +136,17 @@ export class ViewModel {
       Object.assign(el, elBindings);
 
       const styles = uxjsCode.style.bind(el)();
-      if (styles) styles.forEach(style => {
-        // style.textContent = style.textContent?.replace(/(?:^|\s)items(?=\s|\.)/g, ' div.items') ?? null;
-        el.insertBefore(style, el.childNodes[0]);
-      });
+      if (styles) {
+        styles.slice(1).forEach(style => {
+          // style.textContent = style.textContent?.replace(/(?:^|\s)items(?=\s|\.)/g, ' div.items') ?? null;
+          // el.insertBefore(style, el.childNodes[0]);
+          // @ts-ignore
+          styles[0].textContent += style.textContent;
+        });
+
+        this._style = styles[0];
+        document.head.append(this._style);
+      }
 
       this.setUpItemsRefs(el, viewState);
     }
@@ -242,6 +250,10 @@ export class ViewModel {
       this.detach();
     }
 
+    if (this._style) {
+      document.head.append(this._style);
+    }
+
     const itemsForData = attachTo._items[itemsFor];
     const itemsLength = itemsForData.items.length;
     const position = (opts?.position !== undefined && opts.position < itemsLength) ? opts.position : itemsLength;
@@ -279,6 +291,10 @@ export class ViewModel {
   detach (): ViewModel {
     if (this._attachedTo) {
       this._attachedTo.itemEl.remove();
+      if (this._style) {
+        this._style.remove();
+      }
+
       const itemsForData = this._attachedTo.vm._items[this._attachedTo.itemFor];
       const itemIdx = itemsForData.items.indexOf(this);
       if (itemIdx > -1) {
@@ -465,6 +481,11 @@ export class GenesisViewModel {
 
     view.detach();
     this._domEl.appendChild(view.domEl);
+    // @ts-ignore
+    if (view._style) {
+      // @ts-ignore
+      document.head.append(view._style);
+    }
     (view.domEl as CustomElement).postRender?.();
     this._items.push(view as ViewModel);
     return view as ViewModel;

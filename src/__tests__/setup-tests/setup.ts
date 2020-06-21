@@ -20,6 +20,7 @@ walkDirTree(uxuiPath, { fileNameMatcher: /[.]uxjs$/, recursive: true })
   .forEach(uxjs => UX.add(require(uxjs)));
 
 beforeEach(() => {
+  document.head.innerHTML = '';
   document.body.innerHTML = '';
   jest.spyOn(utils, 'getUniqueElId').mockImplementation(() => `ux-${elCount++}`);
 });

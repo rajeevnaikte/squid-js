@@ -1,25 +1,30 @@
+<html>
+<head>
+  <style class="ux-1">.form-group.ux-1 {
+    color: red;
+  }
+
+  #ux123.ux-1 {
+    padding: 10px;
+  }
+
+  #ux123.ux-1 .some-class.ux-1 {
+    color: red;
+  }
+
+  .some-class.some-class2.ux-1, .some-class.some-class3.ux-1, .some-class.some-class4.ux-1 {
+    border: 1px solid red;
+  }</style>
+</head>
+<body>
 <div class="my-panel ux-0" ux="panel-my-panel">
   <!--items-->
-  <div class="form-group ux-1" ux="form-field-valid">
-      <style class="ux-1">.form-group.ux-1 {
-        color: red;
-      }
-
-      #ux123.ux-1 {
-        padding: 10px;
-      }
-
-      #ux123.ux-1 .some-class.ux-1 {
-        color: red;
-      }
-
-      .some-class.some-class2.ux-1, .some-class.some-class3.ux-1, .some-class.some-class4.ux-1 {
-        border: 1px solid red;
-      }</style><label for="" class="ux-1"></label>test<input type="email"
-                                                    class="form-control ux-1" id=""
-                                                    aria-describedby="emailHelp"
-                                                    placeholder="">test2<br
-        class="ux-1"><small
-        id="emailHelp" class="form-text text-muted ux-1"></small>
-    </div>
+  <div class="form-group ux-1" ux="form-field-valid"><label for="" class="ux-1"></label>test<input type="email"
+                                                                                                   class="form-control ux-1"
+                                                                                                   id=""
+                                                                                                   aria-describedby="emailHelp"
+                                                                                                   placeholder="">test2<br
+      class="ux-1"><small id="emailHelp" class="form-text text-muted ux-1"></small></div>
 </div>
+</body>
+</html>

@@ -43,7 +43,7 @@
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "js-beautify": "^1.11.0",
     "squid-node-utils": "^1.0.2",
-    "squid-uxui": "^1.4.10",
+    "squid-uxui": "^1.4.12",
     "ts-jest": "^25.5.1",
     "ts-loader": "^7.0.5",
     "ts-node": "^8.10.2",

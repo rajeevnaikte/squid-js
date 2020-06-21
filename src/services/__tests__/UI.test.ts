@@ -10,7 +10,7 @@ describe('UI', () => {
       ux: 'form-field-valid'
     });
 
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/valid.ux`) ?? ''));
   });
 
@@ -37,7 +37,7 @@ describe('UI', () => {
       }]
     });
 
-    expect(prettyHtml(document.body.innerHTML))
+    expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/with-items.ux`) ?? ''));
   });
 

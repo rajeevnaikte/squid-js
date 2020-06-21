@@ -1,14 +1,17 @@
+<html>
+<head></head>
+<body>
 <table class="ux-0" ux="table">
   <thead class="ux-0">
   <!--items-->
   <th items-for="columns" class="ux-0">
     <p class="ux-0">
-      <p class="ux-3" ux="text-box">column 1</p>
+    <p class="ux-3" ux="text-box">column 1</p>
     </p>
   </th>
   <th items-for="columns" class="ux-0">
     <p class="ux-0">
-      <p class="ux-4" ux="text-box">column 2</p>
+    <p class="ux-4" ux="text-box">column 2</p>
     </p>
   </th>
   </thead>
@@ -32,3 +35,5 @@
   </tr>
   </tbody>
 </table>
+</body>
+</html>
