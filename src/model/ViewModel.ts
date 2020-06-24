@@ -131,11 +131,7 @@ export class ViewModel {
         }
       };
 
-      el = uxjsCode.html.bind(elBindings)()[0] as CustomElement;
-      el.setAttribute(Config.UX_NAME_ATTRIB, viewState.ux);
-      Object.assign(el, elBindings);
-
-      const styles = uxjsCode.style.bind(el)();
+      const styles = uxjsCode.style.bind(elBindings)();
       if (styles) {
         styles.slice(1).forEach(style => {
           // style.textContent = style.textContent?.replace(/(?:^|\s)items(?=\s|\.)/g, ' div.items') ?? null;
@@ -147,6 +143,10 @@ export class ViewModel {
         this._style = styles[0];
         document.head.append(this._style);
       }
+
+      el = uxjsCode.html.bind(elBindings)()[0] as CustomElement;
+      el.setAttribute(Config.UX_NAME_ATTRIB, viewState.ux);
+      Object.assign(el, elBindings);
 
       this.setUpItemsRefs(el, viewState);
     }
