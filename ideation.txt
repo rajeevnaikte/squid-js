@@ -4,3 +4,8 @@ e.g. addItems not in component. Should it be? ViewModel has up and down methods,
 of methods. Component will extend the ViewModel
 
 - problem, need a type saying not in keyof ViewModel
+
+-- solution - ViewModel object to be merged with Component implementation methods. So there will only be
+a ViewModel type with all features.
+
+- Problem whether the Component buildViewState to be returning array of ViewState or single?
