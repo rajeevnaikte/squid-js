@@ -1,0 +1,6 @@
+- Problem with ViewModel vs Component. How to generalize. The typescript type return will need to have two types.
+How to avoid that. Come up with a generic interface? Whats blocking? some methods are not overlaping.
+e.g. addItems not in component. Should it be? ViewModel has up and down methods, hmm. It is full fledge class
+of methods. Component will extend the ViewModel
+
+- problem, need a type saying not in keyof ViewModel

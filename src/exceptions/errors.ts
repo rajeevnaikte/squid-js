@@ -41,3 +41,9 @@ export class ComponentUndefined extends BaseError {
     super('COMP_NOT_FOUND', `Component '${compName}' not defined.`);
   }
 }
+
+export class ReservedComponentKey extends BaseError {
+  constructor (compName: string, keys: string[]) {
+    super('RESERVED_COMP_KEY', `Component ${compName} using reserved key(s): ${keys.toLocaleString()}`);
+  }
+}

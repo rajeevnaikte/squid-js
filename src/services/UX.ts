@@ -2,7 +2,9 @@ import { UXJSCode } from '../model/types';
 import { addDefinedComponent, verifyCanDefine } from '../data/storage';
 import { kebabCase } from 'lodash';
 import { ComponentType } from '../model/ComponentType';
-import { Component } from '../model/Component';
+import { Component } from '..';
+import { ViewModel } from '..';
+import { ReservedComponentKey } from '../exceptions/errors';
 
 /**
  * Class with static method to load/pre-process uxjs code.
@@ -28,6 +30,16 @@ export class UX {
   }
 
   static define (compName: string, compDef: typeof Component.constructor): void {
+    const viewModelKeys = Object.getOwnPropertyNames(ViewModel.prototype);
+    const validKeys = ['constructor', 'onStateUpdate'];
+    const invalidKeys = Object.getOwnPropertyNames(compDef.prototype)
+      .filter(compKey => !validKeys.includes(compKey))
+      .filter(compKey => viewModelKeys.includes(compKey));
+
+    if (invalidKeys.length) {
+      throw new ReservedComponentKey(compName, invalidKeys);
+    }
+
     compName = kebabCase(compName);
     verifyCanDefine(compName);
     addDefinedComponent(compName, ComponentType.COMPOSITE, compDef);
