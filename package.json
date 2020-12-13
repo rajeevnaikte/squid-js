@@ -34,19 +34,19 @@
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",
-    "@types/js-beautify": "^1.11.0",
-    "@types/lodash": "^4.14.156",
+    "@types/js-beautify": "^1.13.1",
+    "@types/lodash": "^4.14.165",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "eslint": "^6.8.0",
     "jest": "^25.5.4",
     "jest-environment-jsdom-sixteen": "^1.0.3",
-    "js-beautify": "^1.11.0",
+    "js-beautify": "^1.13.0",
     "squid-node-utils": "^1.0.2",
-    "squid-uxui": "^1.4.14",
+    "squid-uxui": "^1.4.18",
     "ts-jest": "^25.5.1",
     "ts-loader": "^7.0.5",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.7"
   }
 }
