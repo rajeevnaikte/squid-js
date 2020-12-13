@@ -1,5 +1,6 @@
 import { ViewState } from './ViewState';
 import { ViewModel } from './ViewModel';
+import { BaseError } from 'squid-utils';
 
 /**
  * UI component is a view built from multiple UX components.
@@ -14,6 +15,21 @@ export abstract class Component {
   readonly vm: ViewModel;
 
   public constructor (vm: ViewModel) {
+    const reservedProperties = Object.getOwnPropertyNames(ViewModel.prototype)
+      .filter(value => !['constructor', 'onStateUpdate', 'onListenerUpdate'].includes(value));
+
+    const overlap = Object.getOwnPropertyNames(this.constructor.prototype)
+      .filter(value => value !== 'constructor')
+      .find(value => reservedProperties.includes(value));
+
+    if (overlap)
+    {
+      throw new BaseError(
+        'CLASS_PROPERTY_NOT_ALLOWED',
+        `${reservedProperties} are not allowed to use in the class def.`
+      );
+    }
+
     this.vm = vm;
   }
 
