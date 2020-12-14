@@ -8,6 +8,7 @@ export const Config = loadConfigs(defaultConfigs);
  */
 export const setConfigs = (
   configs: { [key: string]: JsonType | Primitive } | typeof import('./configs.json')
-): void => {
+): void =>
+{
   loadConfigs(Object.assign(Config, configs));
 };

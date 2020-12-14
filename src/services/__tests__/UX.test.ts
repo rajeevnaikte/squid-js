@@ -5,21 +5,29 @@ import { UX } from '../UX';
 import { Component, ViewState } from '../..';
 import { ReservedComponentKey } from '../../exceptions/errors';
 
-describe('UX', () => {
-  test('add uxjs', async () => {
+describe('UX', () =>
+{
+  test('add uxjs', async () =>
+  {
     UI.render({ ux: 'form-field-valid' });
     expect(prettyHtml(document.documentElement.outerHTML))
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/valid.ux`) ?? ''));
   });
 
-  test('define', () => {
+  test('define', () =>
+  {
     expect(() =>
-      UX.define('TestComponent', class extends Component {
-        buildViewState (viewState: ViewState): ViewState[] {
+      UX.define('TestComponent', class extends Component
+      {
+        buildViewState (viewState: ViewState): ViewState[]
+        {
           return [];
         }
-        addItem () {}
+
+        addItem ()
+        {
+        }
       })
-    ).toThrow(new ReservedComponentKey('TestComponent', ['addItem']))
+    ).toThrow(new ReservedComponentKey('TestComponent', ['addItem']));
   });
 });

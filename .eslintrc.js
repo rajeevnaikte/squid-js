@@ -11,6 +11,10 @@ module.exports =  {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/no-var-requires': 'off',
-    '@typescript-eslint/no-empty-function': 'off'
+    '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/brace-style': ['error', 'allman'],
+    'import/prefer-default-export': 'off',
+    'key-spacing': [ 'error', { align: 'value' } ],
+    '@typescript-eslint/no-use-before-define': 'off'
   }
 };

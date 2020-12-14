@@ -4,8 +4,10 @@ import { UI } from '../../index';
 import { ElementMissing, ItemsNotAllowed } from '../../exceptions/errors';
 import { Config } from '../../configurations/configuration';
 
-describe('UI', () => {
-  test('add app component', async () => {
+describe('UI', () =>
+{
+  test('add app component', async () =>
+  {
     UI.render({
       ux: 'form-field-valid'
     });
@@ -14,14 +16,17 @@ describe('UI', () => {
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/valid.ux`) ?? ''));
   });
 
-  test('component items not allowed', async () => {
-    await expect(new Promise((resolve, reject) => {
-      window.onerror = ((event, source, lineno, colno, error) => {
+  test('component items not allowed', async () =>
+  {
+    await expect(new Promise((resolve, reject) =>
+    {
+      window.onerror = ((event, source, lineno, colno, error) =>
+      {
         reject(error);
       });
 
       UI.render({
-        ux: 'form-field-valid',
+        ux:    'form-field-valid',
         items: [{
           ux: 'form-field-valid'
         }]
@@ -29,9 +34,10 @@ describe('UI', () => {
     })).rejects.toThrow(new ItemsNotAllowed('form-field-valid', Config.MAIN_ITEMS_REF));
   });
 
-  test('add component items', async () => {
+  test('add component items', async () =>
+  {
     UI.render({
-      ux: 'panel-my-panel',
+      ux:    'panel-my-panel',
       items: [{
         ux: 'form-field-valid'
       }]
@@ -41,7 +47,8 @@ describe('UI', () => {
       .toEqual(prettyHtml(readFile(`${__dirname}/expected/with-items.ux`) ?? ''));
   });
 
-  test('invalid element id passed', async () => {
+  test('invalid element id passed', async () =>
+  {
     expect(() => UI.render({ ux: '' }, 'root'))
       .toThrow(new ElementMissing('root'));
   });

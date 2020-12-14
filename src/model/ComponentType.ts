@@ -1,4 +1,5 @@
-export enum ComponentType {
+export enum ComponentType
+{
   HTML,
   COMPOSITE
 }

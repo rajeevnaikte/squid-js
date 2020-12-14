@@ -11,7 +11,8 @@ export type UXJSCode = {
   script: () => void;
 };
 
-export interface CustomElement extends HTMLElement {
+export interface CustomElement extends HTMLElement
+{
   onDataUpdate: { [dataJsonPath: string]: (() => void)[] };
   getData: (name: string) => string;
   connectedCallback: () => void;
