@@ -168,8 +168,8 @@ export class ViewModel
 			itemFor: itemsFor,
 			itemEl: elementToInsert
 		};
-    itemsForData.items.splice(position, 0, this);
-  }
+		itemsForData.items.splice(position, 0, this);
+	}
 
 	/**
 	 * Detach the ViewModel from the app.
