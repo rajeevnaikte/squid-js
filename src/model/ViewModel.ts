@@ -324,9 +324,9 @@ export class ViewModel
 
 			const reservedFunctionsUsage = Object.getOwnPropertyNames(this._comp.constructor.prototype)
 				.filter(value => value !== 'constructor')
-				.filter(compMethod => !reservedProperties.includes(compMethod));
+				.filter(compMethod => reservedProperties.includes(compMethod));
 			if (reservedFunctionsUsage.length > 0) {
-				throw new Error(`${viewState.ux} has reserved function names.`
+				throw new Error(`${viewState.ux} has reserved function names. `
 					+ `Please rename function(s) - ${reservedFunctionsUsage}`);
 			}
 
