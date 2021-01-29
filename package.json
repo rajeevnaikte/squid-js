@@ -33,20 +33,20 @@
     "squid-utils": "^3.0.11"
   },
   "devDependencies": {
-    "@types/jest": "^25.2.3",
+    "@types/jest": "^26.0.20",
     "@types/js-beautify": "^1.13.1",
     "@types/lodash": "^4.14.168",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
-    "@typescript-eslint/parser": "^2.34.0",
+    "@typescript-eslint/parser": "^4.14.1",
     "eslint": "^7.18.0",
-    "jest": "^25.5.4",
+    "jest": "^26.6.3",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "js-beautify": "^1.13.4",
     "squid-node-utils": "^1.0.2",
     "squid-uxui": "^1.4.19",
-    "ts-jest": "^25.5.1",
-    "ts-loader": "^7.0.5",
-    "ts-node": "^8.10.2",
-    "typescript": "^3.9.7"
+    "ts-jest": "^26.4.4",
+    "ts-loader": "^8.0.14",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3"
   }
 }
