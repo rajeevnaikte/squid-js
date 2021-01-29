@@ -18,18 +18,19 @@ export abstract class Component
 
   public constructor (vm: ViewModel)
   {
-    const overlap = Object.getOwnPropertyNames(this.constructor.prototype)
-      .filter(value => value !== 'constructor')
-      .find(value => reservedProperties.includes(value));
+  	const overlap = Object.getOwnPropertyNames(this.constructor.prototype)
+  		.filter(value => value !== 'constructor')
+  		.find(value => reservedProperties.includes(value));
 
-    if (overlap) {
-      throw new BaseError(
-        'CLASS_PROPERTY_NOT_ALLOWED',
-        `${reservedProperties} are not allowed to use in the class def.`
-      );
-    }
+  	if (overlap) 
+  	{
+  		throw new BaseError(
+  			'CLASS_PROPERTY_NOT_ALLOWED',
+  			`${reservedProperties} are not allowed to use in the class def.`
+  		);
+  	}
 
-    this.vm = vm;
+  	this.vm = vm;
   }
 
   /**
