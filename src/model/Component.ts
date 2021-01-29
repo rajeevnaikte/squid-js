@@ -22,8 +22,7 @@ export abstract class Component
       .filter(value => value !== 'constructor')
       .find(value => reservedProperties.includes(value));
 
-    if (overlap)
-    {
+    if (overlap) {
       throw new BaseError(
         'CLASS_PROPERTY_NOT_ALLOWED',
         `${reservedProperties} are not allowed to use in the class def.`
