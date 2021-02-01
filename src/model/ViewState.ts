@@ -3,7 +3,7 @@ import { ViewModel } from './ViewModel';
 /**
  * Configuration of the view to be rendered.
  */
-export type ViewStateBase = {
+export type ViewState = {
   /**
    * The full UX name. E.g. form.text-input or form-text-input
    * The name can be in any format. It will be kebabCased in the framework.
@@ -13,6 +13,10 @@ export type ViewStateBase = {
    * CSS class to be applied to this view root element.
    */
   cssClass?: string;
+  /**
+   * Data used in the display of the view.
+   */
+  state?: Record<string, any>;
   /**
    * Items to be displayed under this UX. E.g. multiple form-text-input under form.
    *
@@ -45,13 +49,6 @@ export type ViewStateBase = {
    * By default events will not be bubbled up.
    */
   bubbleEvents?: boolean;
-}
-
-export type ViewState = ViewStateBase & {
-  /**
-   * Key value pairs of any type. The keys used in the UX code.
-   */
-  [key: string]: any;
 }
 
 export const baseViewConfigKeys = ['ux', 'items', 'listeners'];

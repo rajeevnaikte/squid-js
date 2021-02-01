@@ -7,25 +7,25 @@ import * as cp from 'child_process';
 let elCount = 0;
 
 walkDirTree(`${__dirname}/../data`, { fileNameMatcher: /[.]uxjs$/, recursive: true })
-  .forEach(uxjs => UX.add(require(uxjs)));
+	.forEach(uxjs => UX.add(require(uxjs)));
 
 const uxuiPath = pathResolve('./.uxui');
 
 cp.execSync(
-  `rm -rf ${uxuiPath} && UI_MODULE_NAME=${__dirname}/../../ && uxui build -u ${__dirname}/../data/ux -e ${__dirname}/../data/app.ts`,
-  { stdio: 'inherit' }
+	`rm -rf ${uxuiPath} && UI_MODULE_NAME=${__dirname}/../../ && uxui build -u ${__dirname}/../data/ux -e ${__dirname}/../data/app.ts`,
+	{ stdio: 'inherit' }
 );
 
 walkDirTree(uxuiPath, { fileNameMatcher: /[.]uxjs$/, recursive: true })
-  .forEach(uxjs => UX.add(require(uxjs)));
+	.forEach(uxjs => UX.add(require(uxjs)));
 
 beforeEach(() => {
-  document.head.innerHTML = '';
-  document.body.innerHTML = '';
-  jest.spyOn(utils, 'getUniqueElId').mockImplementation(() => `ux-${elCount++}`);
+	document.head.innerHTML = '';
+	document.body.innerHTML = '';
+	jest.spyOn(utils, 'getUniqueElId').mockImplementation(() => `ux-${elCount++}`);
 });
 
 afterEach(() => {
-  elCount = 0;
-  jest.clearAllMocks();
+	elCount = 0;
+	jest.clearAllMocks();
 });

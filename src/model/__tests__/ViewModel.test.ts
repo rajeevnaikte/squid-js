@@ -9,8 +9,7 @@ import { MultipleItemsRefs } from '../../exceptions/errors';
 
 describe('ViewModel', () =>
 {
-	test('GenesisViewModel', async () => 
-	{
+	test('GenesisViewModel', async () => {
 		const genesis = new GenesisViewModel(document.body);
 		genesis.add({
 			ux: 'form-field-valid'
@@ -25,11 +24,10 @@ describe('ViewModel', () =>
 		expect(uxViewModel.state).toEqual({});
 	});
 
-	test('with state data', () => 
-	{
+	test('with state data', () => {
 		const genesis = new GenesisViewModel(document.body);
 		genesis.add({
-			ux:                 'form-field-valid',
+			ux: 'form-field-valid',
 			exampleInputEmail1: 'my-email',
 			exampleInputEmail2: 1234
 		});
@@ -37,39 +35,32 @@ describe('ViewModel', () =>
 		expect(prettyHtml(document.documentElement.outerHTML))
 			.toEqual(prettyHtml(readFile(`${__dirname}/expected/with-state.ux`) ?? ''));
 
-		// @ts-ignore
 		const uxViewModel = genesis.items[0];
-		// @ts-ignore
 		expect(uxViewModel.state).toEqual({
 			exampleInputEmail1: 'my-email',
 			exampleInputEmail2: 1234
 		});
 	});
 
-	test('state update', () => 
-	{
+	test('state update', () => {
 		const genesis = new GenesisViewModel(document.body);
 		genesis.add({
-			ux:                 'form-field-valid',
+			ux: 'form-field-valid',
 			exampleInputEmail1: 'my-email',
 			exampleInputEmail2: 1234
 		});
 
-		// @ts-ignore
 		const uxViewModel = genesis.items[0];
-		// @ts-ignore
 		uxViewModel.state.exampleInputEmail2 = 12345;
-		// @ts-ignore
 		expect(uxViewModel.state.exampleInputEmail2).toEqual(12345);
 		expect(document.body.getElementsByTagName('input')[0].getAttribute('id'))
 			.toEqual('12345');
 	});
 
-	test('with two items', async () => 
-	{
+	test('with two items', async () => {
 		const genesis = new GenesisViewModel(document.body);
 		genesis.add({
-			ux:    'form-form',
+			ux: 'form-form',
 			items: [{
 				ux: 'form-text-input'
 			}, {
@@ -81,8 +72,7 @@ describe('ViewModel', () =>
 			.toEqual(prettyHtml(readFile(`${__dirname}/expected/add-two-item.ux`)));
 	});
 
-	test('add and remove item', () => 
-	{
+	test('add and remove item', () => {
 		const genesis = new GenesisViewModel(document.body);
 		const form = new ViewModel({
 			ux: 'form-form'
@@ -122,11 +112,10 @@ describe('ViewModel', () =>
 		expect(removed?.attachedTo).toEqual(undefined);
 	});
 
-	test('detach and attachTo', () => 
-	{
+	test('detach and attachTo', () => {
 		const genesis = new GenesisViewModel(document.body);
 		genesis.add({
-			ux:    'form-form',
+			ux: 'form-form',
 			items: [{
 				ux: 'form-text-input'
 			}, {
@@ -134,7 +123,6 @@ describe('ViewModel', () =>
 			}]
 		});
 
-		// @ts-ignore
 		const detachedViewModel = genesis.items[0].items[0].detach();
 		expect(prettyHtml(document.documentElement.outerHTML))
 			.toEqual(prettyHtml(readFile(`${__dirname}/expected/after-detach.ux`)));
@@ -145,26 +133,23 @@ describe('ViewModel', () =>
 			.toEqual(prettyHtml(readFile(`${__dirname}/expected/re-attached.ux`)));
 
 		// Re-attach to original position.
-		// @ts-ignore
 		detachedViewModel.attachTo(genesis.items[0], { position: 0 });
 		expect(prettyHtml(document.documentElement.outerHTML))
 			.toEqual(prettyHtml(readFile(`${__dirname}/expected/re-add-at-same-position.ux`)));
 	});
 
-	test('listeners', () => 
-	{
+	test('listeners', () => {
 		const eventLogs: string[] = [];
 
 		const genesis = new GenesisViewModel(document.body);
 		const form = genesis.add({
-			ux:    'form-form',
+			ux: 'form-form',
 			items: [{
 				ux: 'form-text-input'
 			}, {
-				ux:        'form-submit-button',
+				ux: 'form-submit-button',
 				listeners: {
-					click: (vm: ViewModel, event: Event) => 
-					{
+					click: (vm: ViewModel, event: Event) => {
 						eventLogs.push(`${vm.id} ${event.type}`);
 					}
 				}
@@ -174,15 +159,13 @@ describe('ViewModel', () =>
 		document.body.getElementsByTagName('button')[0].click();
 
 		// Update listener.
-		form.items[1].listeners.click = (vm: ViewModel, event: Event) => 
-		{
+		form.items[1].listeners.click = (vm: ViewModel, event: Event) => {
 			eventLogs.push(`${event.type} ${vm.id}`);
 		};
 		document.body.getElementsByTagName('button')[0].click();
 
 		// Add new listener.
-		form.items[0].listeners.click = (vm: ViewModel, event: Event) => 
-		{
+		form.items[0].listeners.click = (vm: ViewModel, event: Event) => {
 			eventLogs.push(`${event.type} ${vm.id}`);
 		};
 		document.body.getElementsByTagName('input')[0].click();
@@ -190,71 +173,67 @@ describe('ViewModel', () =>
 		expect(eventLogs).toEqual(['ux-2 click', 'click ux-2', 'click ux-1']);
 	});
 
-	describe('component', () => 
-	{
+	describe('component', () => {
 		const eventLogs: string[] = [];
 
-		UX.define('panel.grid', class extends Component 
-		{
-			buildViewState (viewState: ViewState): ViewState[] 
-			{
+		UX.define('panel.grid', class extends Component {
+			buildViewState (viewState: ViewState & {
+				state: {
+					headers: { id: string; label: string; }[];
+				};
+			}): ViewState[] {
 				eventLogs.push('buildViewState called');
 
 				return [{
-					ux:    'panel.grid.header-row',
-					items: viewState.headers.map((header: any) => 
-					{
+					ux: 'panel.grid.header-row',
+					items: viewState.state.headers.map((header: any) => {
 						return {
-							ux:    'panel.grid.header',
+							ux: 'panel.grid.header',
 							label: header.label
 						};
 					})
 				}];
 			}
 
-			onComponentReady () 
-			{
+			onComponentReady () {
 				eventLogs.push('onComponentReady called');
 			}
 
-			onStateUpdate (key: string, prevValue: any, newValue: any) 
-			{
-				if (key === 'header') 
-				{
+			onStateUpdate (key: string, prevValue: any, newValue: any) {
+				if (key === 'header') {
 					throw 'Header update not allowed. Please call \'addHeader()\' method.';
 				}
 			}
 
-			addHeader (id: string, label: string) 
-			{
+			addHeader (id: string, label: string) {
 				this.vm.items[0].addItem({
-					ux:    'panel.grid.header',
+					ux: 'panel.grid.header',
 					label: label
 				});
 			}
 		});
 
-		const renderGrid = () => 
-		{
+		const renderGrid = () => {
 			const app: ViewState = {
-				ux:      'panel.grid',
-				headers: [{
-					id:    'name',
-					label: 'Name'
-				}, {
-					id:    'profession',
-					label: 'Profession'
-				}],
+				ux: 'panel.grid',
+				state: {
+					headers: [{
+						id: 'name',
+						label: 'Name'
+					}, {
+						id: 'profession',
+						label: 'Profession'
+					}]
+				},
 				data: [{
-					name:       'Chaglar',
+					name: 'Chaglar',
 					profession: 'Cafe owner'
 				}, {
-					name:       'Jessie',
+					name: 'Jessie',
 					profession: 'Cook'
 				}],
 				listeners: {
-					click: (vm, e) => 
-					{
+					click: (vm, e) => {
 						eventLogs.push(vm.ux);
 					}
 				}
@@ -266,22 +245,19 @@ describe('ViewModel', () =>
 			return gridCom;
 		};
 
-		test('event calls', () => 
-		{
+		test('event calls', () => {
 			renderGrid();
 			expect(eventLogs).toEqual(['buildViewState called', 'onComponentReady called']);
 		});
 
-		test('custom method', () => 
-		{
+		test('custom method', () => {
 			renderGrid().addHeader('education', 'Education');
 
 			expect(prettyHtml(document.documentElement.outerHTML))
 				.toEqual(prettyHtml(readFile(`${__dirname}/expected/grid-component.ux`)));
 		});
 
-		test('listener', () => 
-		{
+		test('listener', () => {
 			renderGrid();
 
 			Array.from(document.getElementsByTagName('span'))
@@ -290,21 +266,19 @@ describe('ViewModel', () =>
 			expect(eventLogs.filter(log => !log.includes('called'))).toEqual(['panel.grid']);
 		});
 
-		test('state update', () => 
-		{
+		test('state update', () => {
 			expect(() => renderGrid().vm.state.header = [])
 				.toThrow('Header update not allowed. Please call \'addHeader()\' method.');
 		});
 	});
 
-	test('up and down', () => 
-	{
+	test('up and down', () => {
 		const genesis = new GenesisViewModel(document.body);
 		genesis.add({
-			ux:    'form-form',
+			ux: 'form-form',
 			items: [
 				{
-					ux:    'panel-my-panel',
+					ux: 'panel-my-panel',
 					items: [{
 						ux: 'form.text-input'
 					}, {
@@ -320,12 +294,11 @@ describe('ViewModel', () =>
 		expect(textInputs?.[0].up('form_form')).toBeDefined();
 	});
 
-	test('add remove while other elements in sibling', () => 
-	{
+	test('add remove while other elements in sibling', () => {
 		const genesis = new GenesisViewModel(document.body);
 		const form = new ViewModel({
-			ux:     'form.form-panel',
-			title:  'my form',
+			ux: 'form.form-panel',
+			title: 'my form',
 			footer: 'thank you'
 		});
 		genesis.add(form);
@@ -372,28 +345,26 @@ describe('ViewModel', () =>
 			.toEqual(prettyHtml(readFile(`${__dirname}/expected/form-panel/re-attach-at-non-existing-position.ux`)));
 	});
 
-	test('add cssClass', () => 
-	{
+	test('add cssClass', () => {
 		const genesis = new GenesisViewModel(document.body);
 		genesis.add({
-			ux:       'form-form',
+			ux: 'form-form',
 			cssClass: 'test'
 		});
 		expect(prettyHtml(document.documentElement.outerHTML))
 			.toEqual(prettyHtml(readFile(`${__dirname}/expected/add-css-class.ux`)));
 	});
 
-	test('items for', () => 
-	{
+	test('items for', () => {
 		const genesis = new GenesisViewModel(document.body);
 		genesis.add({
-			ux:    'table',
+			ux: 'table',
 			items: {
 				main: [{
-					ux:   'text-box',
+					ux: 'text-box',
 					text: 'main 1'
 				}, {
-					ux:   'text-box',
+					ux: 'text-box',
 					text: 'main 2'
 				}],
 				columns: [{
@@ -414,7 +385,7 @@ describe('ViewModel', () =>
 					ux:   'text-box',
 					text: 'test 1'
 				}, {
-					ux:   'text-box',
+					ux: 'text-box',
 					text: 'test 2'
 				}]
 			}
@@ -423,39 +394,34 @@ describe('ViewModel', () =>
 			.toEqual(prettyHtml(readFile(`${__dirname}/expected/table.ux`)));
 	});
 
-	test('multiple ref to same items key', () => 
-	{
+	test('multiple ref to same items key', () => {
 		const genesis = new GenesisViewModel(document.body);
-		expect(() => 
-		{
+		expect(() => {
 			genesis.add({
 				ux: 'invalid-table'
 			});
 		}).toThrow(new MultipleItemsRefs('invalid-table', 'columns'));
 	});
 
-	test('multiple main items tag', () => 
-	{
+	test('multiple main items tag', () => {
 		const genesis = new GenesisViewModel(document.body);
-		expect(() => 
-		{
+		expect(() => {
 			genesis.add({
 				ux: 'invalid-table2'
 			});
 		}).toThrow(new MultipleItemsRefs('invalid-table-2', 'main'));
 	});
 
-	test('get items', () => 
-	{
+	test('get items', () => {
 		const genesis = new GenesisViewModel(document.body);
 		genesis.add({
-			ux:    'table',
+			ux: 'table',
 			items: {
 				main: [{
-					ux:   'text-box',
+					ux: 'text-box',
 					text: 'main 1'
 				}, {
-					ux:   'text-box',
+					ux: 'text-box',
 					text: 'main 2'
 				}],
 				columns: [{
@@ -489,11 +455,10 @@ describe('ViewModel', () =>
 			.toEqual(['column 1', 'column 2']);
 	});
 
-	test('with script', () => 
-	{
+	test('with script', () => {
 		const genesis = new GenesisViewModel(document.body);
 		genesis.add({
-			ux:    'form-form',
+			ux: 'form-form',
 			items: [{
 				ux: 'with-script'
 			}]
