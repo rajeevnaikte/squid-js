@@ -19,13 +19,15 @@ cp.execSync(
 walkDirTree(uxuiPath, { fileNameMatcher: /[.]uxjs$/, recursive: true })
 	.forEach(uxjs => UX.add(require(uxjs)));
 
-beforeEach(() => {
+beforeEach(() => 
+{
 	document.head.innerHTML = '';
 	document.body.innerHTML = '';
 	jest.spyOn(utils, 'getUniqueElId').mockImplementation(() => `ux-${elCount++}`);
 });
 
-afterEach(() => {
+afterEach(() => 
+{
 	elCount = 0;
 	jest.clearAllMocks();
 });

@@ -1,25 +1,29 @@
 import { Component, UI, UX, ViewState } from '../src';
 
-UX.define('panel.grid', class extends Component {
-	buildViewState (viewState: ViewState) {
+UX.define('panel.grid', class extends Component 
+{
+	buildViewState (viewState: ViewState) 
+	{
 		return [{
-			ux: 'panel.grid.container',
+			ux:    'panel.grid.container',
 			items: [{
-				ux: 'panel.grid.header-row',
-				items: viewState.state.headers.map((header: any) => {
+				ux:    'panel.grid.header-row',
+				items: viewState.state.headers.map((header: any) => 
+				{
 					return {
-						ux: 'panel.grid.header',
+						ux:    'panel.grid.header',
 						label: header.label
 					};
 				})
-			}, ...viewState.state.data.map((row: any) => {
+			}, ...viewState.state.data.map((row: any) => 
+			{
 				return {
-					ux: 'panel.grid.row',
+					ux:    'panel.grid.row',
 					items: [{
-						ux: 'panel.grid.cell',
+						ux:    'panel.grid.cell',
 						value: row.name
 					}, {
-						ux: 'panel.grid.cell',
+						ux:    'panel.grid.cell',
 						value: row.profession
 					}]
 				};
@@ -27,23 +31,25 @@ UX.define('panel.grid', class extends Component {
 		}];
 	}
 
-	addHeader (id: string, label: string) {
+	addHeader (id: string, label: string) 
+	{
 		this.vm.items[0].items[0].addItem({
-			ux: 'panel.grid.header',
+			ux:    'panel.grid.header',
 			label: label
 		});
 	}
 
-	addRow (name: string, profession: string) {
+	addRow (name: string, profession: string) 
+	{
 		this.vm.items[0].addItem({
-			ux: 'panel.grid.row',
+			ux:    'panel.grid.row',
 			items: [{
-				ux: 'panel.grid.cell',
+				ux:    'panel.grid.cell',
 				state: {
 					value: name
 				}
 			}, {
-				ux: 'panel.grid.cell',
+				ux:    'panel.grid.cell',
 				state: {
 					value: profession
 				}
@@ -53,20 +59,20 @@ UX.define('panel.grid', class extends Component {
 });
 
 const app: ViewState = {
-	ux: 'panel.grid',
+	ux:    'panel.grid',
 	state: {
 		headers: [{
-			id: 'name',
+			id:    'name',
 			label: 'Name'
 		}, {
-			id: 'profession',
+			id:    'profession',
 			label: 'Profession'
 		}],
 		data: [{
-			name: 'Chaglar',
+			name:       'Chaglar',
 			profession: 'Cafe owner'
 		}, {
-			name: 'Jessie',
+			name:       'Jessie',
 			profession: 'Cook'
 		}]
 	}
