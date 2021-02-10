@@ -544,7 +544,7 @@ export class GenesisViewModel extends ViewModel
 {
 	private readonly _rootEl: HTMLElement;
 
-	constructor (rootEl: HTMLElement, view: ViewState)
+	constructor (view: ViewState, rootEl: HTMLElement)
 	{
 		super(view);
 		this._rootEl = rootEl;

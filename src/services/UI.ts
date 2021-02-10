@@ -9,10 +9,10 @@ export class UI
 {
 	/**
    * Call this function with root view JSON of your app.
-   * @param app - JSON style view layout which defines the UI. It will be added inside html body tag.
+   * @param applicationView - JSON style view layout which defines the UI. It will be added inside html body tag.
    * @param elementId - Optionally provide a root element id to load the app into (instead of body tag).
    */
-	static render (app: ViewState, elementId?: string): GenesisViewModel
+	static render (applicationView: ViewState, elementId?: string): GenesisViewModel
 	{
 		const root = elementId ? document.getElementById(elementId) : document.body;
 		if (!root)
@@ -22,7 +22,7 @@ export class UI
 		// Clear element before loading app.
 		root.innerHTML = '';
 
-		const genesisViewModel = new GenesisViewModel(root, app);
+		const genesisViewModel = new GenesisViewModel(applicationView, root);
 		return genesisViewModel;
 	}
 }
