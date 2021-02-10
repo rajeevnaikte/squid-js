@@ -1,37 +1,43 @@
 import { Component, UI, UX, ViewState } from '../src';
 
-UX.define('panel.grid', class extends Component 
+UX.define('panel.grid', class extends Component
 {
-	buildViewState (viewState: ViewState) 
+	buildViewState (viewState: ViewState)
 	{
 		return [{
 			ux:    'panel.grid.container',
 			items: [{
 				ux:    'panel.grid.header-row',
-				items: viewState.state.headers.map((header: any) => 
+				items: viewState.state?.headers?.map((header: any) =>
 				{
 					return {
 						ux:    'panel.grid.header',
-						label: header.label
+						state: {
+							label: header.label
+						}
 					};
 				})
-			}, ...viewState.state.data.map((row: any) => 
+			}, ...viewState.state?.data?.map((row: any) =>
 			{
 				return {
 					ux:    'panel.grid.row',
 					items: [{
 						ux:    'panel.grid.cell',
-						value: row.name
+						state: {
+							value: row.name
+						}
 					}, {
 						ux:    'panel.grid.cell',
-						value: row.profession
+						state: {
+							value: row.profession
+						}
 					}]
 				};
 			})]
 		}];
 	}
 
-	addHeader (id: string, label: string) 
+	addHeader (id: string, label: string)
 	{
 		this.vm.items[0].items[0].addItem({
 			ux:    'panel.grid.header',
@@ -39,7 +45,7 @@ UX.define('panel.grid', class extends Component
 		});
 	}
 
-	addRow (name: string, profession: string) 
+	addRow (name: string, profession: string)
 	{
 		this.vm.items[0].addItem({
 			ux:    'panel.grid.row',
@@ -79,6 +85,6 @@ const app: ViewState = {
 };
 
 const appView = UI.render(app);
-const grid = appView.items[0].comp;
+const grid = appView;
 grid.addHeader('education', 'Education');
 grid.addRow('Rajeev', 'SW');
