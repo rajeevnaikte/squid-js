@@ -1,13 +1,7 @@
 <html>
 <head>
-  <style class="ux-1">
-    items.ux-1 > * {
-      margin: 2px;
-      border: 1px solid red;
-    }
-  </style>
-  <style class="ux-2">
-    span.ux-2 {
+  <style class="ux-4">
+    span.ux-4 {
       padding: 10px;
     }
   </style>
@@ -16,9 +10,15 @@
       padding: 10px;
     }
   </style>
-  <style class="ux-4">
-    span.ux-4 {
+  <style class="ux-2">
+    span.ux-2 {
       padding: 10px;
+    }
+  </style>
+  <style class="ux-1">
+    items.ux-1 > * {
+      margin: 2px;
+      border: 1px solid red;
     }
   </style>
 </head>

@@ -1,7 +1,7 @@
 <html>
 <head>
-  <style class="ux-1">
-    .form-input.ux-1 {
+  <style class="ux-3">
+    .form-input.ux-3 {
       color: red;
     }
   </style>
@@ -10,8 +10,8 @@
       color: red;
     }
   </style>
-  <style class="ux-3">
-    .form-input.ux-3 {
+  <style class="ux-1">
+    .form-input.ux-1 {
       color: red;
     }
   </style>

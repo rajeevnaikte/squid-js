@@ -84,7 +84,6 @@ const app: ViewState = {
 	}
 };
 
-const appView = UI.render(app);
-const grid = appView;
+const grid = UI.render(app);
 grid.addHeader('education', 'Education');
 grid.addRow('Rajeev', 'SW');

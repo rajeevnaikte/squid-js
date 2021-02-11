@@ -1,12 +1,12 @@
 <html>
 <head>
-  <style class="ux-2">
-    .form-input.ux-2 {
+  <style class="ux-1">
+    .form-input.ux-1 {
       color: red;
     }
   </style>
-  <style class="ux-1">
-    .form-input.ux-1 {
+  <style class="ux-2">
+    .form-input.ux-2 {
       color: red;
     }
   </style>
@@ -15,7 +15,7 @@
 <form class="ux-0" ux="form-form">
   <!--items-->
   <div class="ux-2" ux="form-text-input">:<input type="text" name="" value="" class="ux-2"></div>
+  <div class="ux-1" ux="form-text-input">:<input type="text" name="" value="" class="ux-1"></div>
 </form>
-<div class="ux-1" ux="form-text-input">:<input type="text" name="" value="" class="ux-1"></div>
 </body>
 </html>

@@ -19,7 +19,7 @@ describe('ViewModel', () =>
 		expect(prettyHtml(document.documentElement.outerHTML))
 			.toEqual(prettyHtml(readFile(`${__dirname}/expected/valid.ux`) ?? ''));
 
-		const uxViewModel = genesis.items[0];
+		const uxViewModel = genesis;
 		expect(uxViewModel).toBeDefined();
 		expect(uxViewModel.id).toEqual('ux-0');
 		expect(uxViewModel.state).toEqual({});
@@ -28,16 +28,18 @@ describe('ViewModel', () =>
 	test('with state data', () =>
 	{
 		const app = {
-			ux:                 'form-field-valid',
-			exampleInputEmail1: 'my-email',
-			exampleInputEmail2: 1234
+			ux:    'form-field-valid',
+			state: {
+				exampleInputEmail1: 'my-email',
+				exampleInputEmail2: 1234
+			},
 		};
 		const genesis = new GenesisViewModel(app, document.body);
 
 		expect(prettyHtml(document.documentElement.outerHTML))
 			.toEqual(prettyHtml(readFile(`${__dirname}/expected/with-state.ux`) ?? ''));
 
-		const uxViewModel = genesis.items[0];
+		const uxViewModel = genesis;
 		expect(uxViewModel.state).toEqual({
 			exampleInputEmail1: 'my-email',
 			exampleInputEmail2: 1234
@@ -47,13 +49,15 @@ describe('ViewModel', () =>
 	test('state update', () =>
 	{
 		const app = {
-			ux:                 'form-field-valid',
-			exampleInputEmail1: 'my-email',
-			exampleInputEmail2: 1234
+			ux:    'form-field-valid',
+			state: {
+				exampleInputEmail1: 'my-email',
+				exampleInputEmail2: 1234
+			},
 		};
 		const genesis = new GenesisViewModel(app, document.body);
 
-		const uxViewModel = genesis.items[0];
+		const uxViewModel = genesis;
 		uxViewModel.state.exampleInputEmail2 = 12345;
 		expect(uxViewModel.state.exampleInputEmail2).toEqual(12345);
 		expect(document.body.getElementsByTagName('input')[0].getAttribute('id'))
@@ -128,17 +132,17 @@ describe('ViewModel', () =>
 		};
 		const genesis = new GenesisViewModel(form, document.body);
 
-		const detachedViewModel = genesis.items[0].items[0].detach();
+		const detachedViewModel = genesis.items[0].detach();
 		expect(prettyHtml(document.documentElement.outerHTML))
 			.toEqual(prettyHtml(readFile(`${__dirname}/expected/after-detach.ux`)));
 
 		// Re-attach in different place.
-		genesis.add(detachedViewModel);
+		genesis.addItem(detachedViewModel);
 		expect(prettyHtml(document.documentElement.outerHTML))
 			.toEqual(prettyHtml(readFile(`${__dirname}/expected/re-attached.ux`)));
 
 		// Re-attach to original position.
-		detachedViewModel.attachTo(genesis.items[0], { position: 0 });
+		detachedViewModel.attachTo(genesis, { position: 0 });
 		expect(prettyHtml(document.documentElement.outerHTML))
 			.toEqual(prettyHtml(readFile(`${__dirname}/expected/re-add-at-same-position.ux`)));
 	});
@@ -258,9 +262,7 @@ describe('ViewModel', () =>
 			};
 
 			const appView = UI.render(app);
-			const gridCom = appView.items[0].comp;
-
-			return gridCom;
+			return appView;
 		};
 
 		test('event calls', () =>
@@ -289,7 +291,7 @@ describe('ViewModel', () =>
 
 		test('state update', () =>
 		{
-			expect(() => renderGrid().vm.state.header = [])
+			expect(() => renderGrid().state.header = [])
 				.toThrow('Header update not allowed. Please call \'addHeader()\' method.');
 		});
 	});
@@ -475,7 +477,7 @@ describe('ViewModel', () =>
 			}
 		}, document.body);
 
-		const table = genesis.items[0];
+		const table = genesis;
 		expect(table.items.map(item => item.ux))
 			.toEqual(new Array(8).fill('text-box'));
 		expect(table.getItems('columns').map(item => item.state.text))

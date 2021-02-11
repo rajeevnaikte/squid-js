@@ -1,14 +1,14 @@
 <html>
 <head>
+  <style class="ux-2">
+    .form-input.ux-2 {
+      color: red;
+    }
+  </style>
   <style class="ux-1">
     .form-input.ux-1 {
       color: red;
     }
-  </style>
-  <style class="ux-2">
-      .form-input.ux-2 {
-          color: red;
-      }
   </style>
 </head>
 <body>
