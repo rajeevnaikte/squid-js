@@ -1,5 +1,5 @@
 module.exports =  {
-	parser: '@typescript-eslint/parser',  // Specifies the ESLint parser
+	parser:  '@typescript-eslint/parser',  // Specifies the ESLint parser
 	extends: [
 		'plugin:@typescript-eslint/recommended',  // Uses the recommended rules from the @typescript-eslint/eslint-plugin
 	],
@@ -9,13 +9,13 @@ module.exports =  {
 	rules: {
 		// Place to specify ESLint rules. Can be used to overwrite rules specified from the extended Config
 		'@typescript-eslint/explicit-function-return-type': 'off',
-		'@typescript-eslint/ban-ts-ignore': 'off',
-		'@typescript-eslint/no-var-requires': 'off',
-		'@typescript-eslint/no-empty-function': 'off',
-		'@typescript-eslint/brace-style': ['error', 'allman'],
-		'import/prefer-default-export': 'off',
-		'key-spacing': ['error', {align: 'value'}],
-		'@typescript-eslint/no-use-before-define': 'off',
-		'indent': ['error', 'tab']
+		'@typescript-eslint/ban-ts-ignore':                 'off',
+		'@typescript-eslint/no-var-requires':               'off',
+		'@typescript-eslint/no-empty-function':             'off',
+		'@typescript-eslint/brace-style':                   ['error', 'allman'],
+		'import/prefer-default-export':                     'off',
+		'key-spacing':                                      ['error', {align: 'value'}],
+		'@typescript-eslint/no-use-before-define':          'off',
+		'indent':                                           ['error', 'tab']
 	}
 };
