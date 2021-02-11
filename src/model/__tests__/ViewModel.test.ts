@@ -82,10 +82,9 @@ describe('ViewModel', () =>
 
 	test('add and remove item', () =>
 	{
-		const form = new ViewModel({
+		const form = new GenesisViewModel({
 			ux: 'form-form'
-		});
-		const genesis = new GenesisViewModel(form, document.body);
+		}, document.body);
 
 		// Add an item.
 		form.addItem({
@@ -114,7 +113,7 @@ describe('ViewModel', () =>
 		expect(removed?.attachedTo).toEqual(form);
 
 		// Move an item to different place.
-		if (removed) genesis.add(removed);
+		if (removed) form.addItem(removed);
 		expect(prettyHtml(document.documentElement.outerHTML))
 			.toEqual(prettyHtml(readFile(`${__dirname}/expected/re-attached.ux`)));
 		expect(removed?.attachedTo).toEqual(undefined);
@@ -205,7 +204,9 @@ describe('ViewModel', () =>
 					{
 						return {
 							ux:    'panel.grid.header',
-							label: header.label
+							state: {
+								label: header.label
+							}
 						};
 					})
 				}];
@@ -228,7 +229,9 @@ describe('ViewModel', () =>
 			{
 				this.vm.items[0].addItem({
 					ux:    'panel.grid.header',
-					label: label
+					state: {
+						label: label
+					}
 				});
 			}
 		});
