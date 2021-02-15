@@ -40,7 +40,7 @@ export type ViewState = {
    *   }]
    * }
    */
-  items?: ViewState[] | { [itemsFor: string]: ViewState[] };
+  items?: (ViewState | ViewModel)[] | { [itemsFor: string]: (ViewState | ViewModel)[] };
   /**
    * HTML DOM listeners can be added here.
    */

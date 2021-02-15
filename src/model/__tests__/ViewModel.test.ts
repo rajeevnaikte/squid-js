@@ -501,4 +501,20 @@ describe('ViewModel', () =>
 		expect(prettyHtml(document.documentElement.outerHTML))
 			.toEqual(prettyHtml(readFile(`${__dirname}/expected/with-script.ux`)));
 	});
+
+
+	test('item as viewmodel', () =>
+	{
+		const withScript = new ViewModel({ ux: 'with-script' });
+		const app = {
+			ux:    'form-form',
+			items: [withScript],
+		};
+		const genesis = new GenesisViewModel(app, document.body);
+
+		document.body.getElementsByTagName('form')[0].click();
+
+		expect(prettyHtml(document.documentElement.outerHTML))
+			.toEqual(prettyHtml(readFile(`${__dirname}/expected/with-script.ux`)));
+	});
 });
